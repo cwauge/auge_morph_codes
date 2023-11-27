@@ -18,6 +18,75 @@ class Plotter():
         self.classes = classes # classification options. Act as keys into the input dictionary
         self.dict = input_dict # input dictionary. keys are the classifications. Values are arrays in order of IDs (IDs may be included).
 
+        self.main_classes = np.asarray([i for i in classes if 'flag' not in i])
+        self.flag_classes = np.asarray([i for i in classes if 'flag' in i])
+
+
+        self.disk = self.dict['Disk']
+        self.disk_sph = self.dict['Disk-Spheroid']
+        self.sph = self.dict['Spheroid']
+        self.irrg = self.dict['Irregular']
+        self.ps = self.dict['PS']
+        self.unc = self.dict['Unclassifiable']
+        self.blank = self.dict['Blank']
+        self.merger_f = self.dict['Merger_flag']
+        self.tf_f = self.dict['TF_flag']
+        self.ps_f = self.dict['PS_flag']
+
+        plt.rcParams['font.size'] = 18
+        plt.rcParams['axes.linewidth'] = 3.5
+        plt.rcParams['xtick.major.size'] = 5
+        plt.rcParams['xtick.major.width'] = 4
+        plt.rcParams['ytick.major.size'] = 5
+        plt.rcParams['ytick.major.width'] = 4
+        plt.rcParams['xtick.minor.size'] = 3.
+        plt.rcParams['xtick.minor.width'] = 2.
+        plt.rcParams['ytick.minor.size'] = 3.
+        plt.rcParams['ytick.minor.width'] = 2.
+        plt.rcParams['hatch.linewidth'] = 2.5
+
+    def match_flags(self):
+        disk_ps_flag_loc   = (self.disk == 1) & (self.ps_f == 1)
+        disk_tf_flag_loc   = (self.disk == 1) & (self.tf_f == 1)
+        disk_merg_flag_loc = (self.disk == 1) & (self.merger_f == 1)
+
+        disk_sph_ps_flag_loc   = (self.disk_sph == 1) & (self.ps_f == 1)
+        disk_sph_tf_flag_loc   = (self.disk_sph == 1) & (self.tf_f == 1)
+        disk_sph_merg_flag_loc = (self.disk_sph == 1) & (self.merger_f == 1)
+
+        sph_ps_flag_loc   = (self.sph == 1) & (self.ps_f == 1)
+        sph_tf_flag_loc   = (self.sph == 1) & (self.tf_f == 1)
+        sph_merg_flag_loc = (self.sph == 1) & (self.merger_f == 1)
+
+        irrg_ps_flag_loc   = (self.irrg == 1) & (self.ps_f == 1)
+        irrg_tf_flag_loc   = (self.irrg == 1) & (self.tf_f == 1)
+        irrg_merg_flag_loc = (self.irrg == 1) & (self.merger_f == 1)
+
+        ps_ps_flag_loc   = (self.ps == 1) & (self.ps_f == 1)
+        ps_tf_flag_loc   = (self.ps == 1) & (self.tf_f == 1)
+        ps_merg_flag_loc = (self.ps == 1) & (self.merger_f == 1)
+
+
+
+    def hist(self):
+
+        xlabels = self.main_classes
+        xticks = np.linspace(0,21,len(xlabels))
+
+        plt.figure(figsize=(9,9),facecolor='w')
+        ax = plt.subplot(111)
+        ax.set_xticks(xticks,xlabels)
+        ax.bar(xticks[0],np.nansum(self.disk),color='gray')
+        ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray')
+        ax.bar(xticks[2],np.nansum(self.sph),color='gray')
+        ax.bar(xticks[3],np.nansum(self.irrg),color='gray')
+        ax.bar(xticks[4],np.nansum(self.ps),color='gray')
+        ax.bar(xticks[5],np.nansum(self.unc),color='gray')
+        ax.bar(xticks[6],np.nansum(self.blank),color='gray')
+        plt.show()
+
+
+
 
 
 if __name__ == '__main__':
