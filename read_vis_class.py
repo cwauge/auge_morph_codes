@@ -75,6 +75,8 @@ class Read_File():
         for i in range(len(keys)):
             dict_out[keys[i]] = dict_data[i]
 
+        return dict_out
+
 
 
             
