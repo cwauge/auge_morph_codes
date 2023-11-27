@@ -5,11 +5,12 @@ Class to read in visual morphology classifications from .csv file (fromatted lik
 
 import numpy as np
 import argparse
+import pandas as pd
 from astropy.io import fits
 from astropy.io import ascii
 
 def main(fname,path='None'):
-    f = Read_File(fname,path)
+    inf = Read_File(fname,path)
 
 class Read_File():
     
@@ -24,11 +25,59 @@ class Read_File():
     def open(self,type):
         if type == 'fits':
             with fits.open(self.path+self.fname) as hdul:
-                self.cols = hdul[1].columns
-                self.data = hdul[1].data 
+                self.fcols = hdul[1].columns
+                self.fdata = hdul[1].data 
 
         elif type == 'csv':
-            self.data = ascii.read(self.path+self.fname)
+            self.fdata = ascii.read(self.path+self.fname)
+            self.fcols = self.data.columns
+
+        elif type =='xlsx':
+            hdul = pd.read_excel(self.path+self.fname)
+            self.fnotes = hdul['Notes'].to_numpy()
+            self.fID = hdul['ID'].to_numpy()
+            hdul_no_notes = hdul.drop(labels='Notes',axis=1)
+            hdul_short = hdul_no_notes.drop(labels='ID',axis=1)
+            self.fcols = hdul_short.columns.to_numpy()
+            self.fdata = hdul_short.to_numpy()
+
+            self.fdata_long = hdul_no_notes.to_numpy()
+            self.fcols_long = hdul_no_notes.columns.to_numpy()
+
+    def columns(self,long=False):
+        if long: 
+            return self.fcols_long
+        else:
+            return self.fcols
+
+    def data(self,long=False):
+        if long: 
+            return self.fdata_long
+        else:
+            return self.fdata
+    
+    def notes(self):
+        return self.fnotes
+    
+    def IDs(self):
+        return self.fID
+    
+    def x_to_one(self,array):
+        array[array == 'x'] = 1.0
+        array = np.asarray(array,dtype=float)
+
+    def make_dict(self,keys,array,transpose=False):
+        dict_out = dict.fromkeys(keys)
+
+        if transpose:
+            dict_data = array.T
+        
+        for i in range(len(keys)):
+            dict_out[keys[i]] = dict_data[i]
+
+
+
+            
 
 
     
