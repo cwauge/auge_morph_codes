@@ -45,27 +45,18 @@ class Plotter():
         plt.rcParams['ytick.minor.width'] = 2.
         plt.rcParams['hatch.linewidth'] = 2.5
 
-    def match_flags(self):
-        disk_ps_flag_loc   = (self.disk == 1) & (self.ps_f == 1)
-        disk_tf_flag_loc   = (self.disk == 1) & (self.tf_f == 1)
-        disk_merg_flag_loc = (self.disk == 1) & (self.merger_f == 1)
+    def match_flags(self,main_class,flag,out='main'):
 
-        disk_sph_ps_flag_loc   = (self.disk_sph == 1) & (self.ps_f == 1)
-        disk_sph_tf_flag_loc   = (self.disk_sph == 1) & (self.tf_f == 1)
-        disk_sph_merg_flag_loc = (self.disk_sph == 1) & (self.merger_f == 1)
-
-        sph_ps_flag_loc   = (self.sph == 1) & (self.ps_f == 1)
-        sph_tf_flag_loc   = (self.sph == 1) & (self.tf_f == 1)
-        sph_merg_flag_loc = (self.sph == 1) & (self.merger_f == 1)
-
-        irrg_ps_flag_loc   = (self.irrg == 1) & (self.ps_f == 1)
-        irrg_tf_flag_loc   = (self.irrg == 1) & (self.tf_f == 1)
-        irrg_merg_flag_loc = (self.irrg == 1) & (self.merger_f == 1)
-
-        ps_ps_flag_loc   = (self.ps == 1) & (self.ps_f == 1)
-        ps_tf_flag_loc   = (self.ps == 1) & (self.tf_f == 1)
-        ps_merg_flag_loc = (self.ps == 1) & (self.merger_f == 1)
-
+        loc = (main_class == 1) & (flag == 1)
+        if out == 'main':
+            out_array = main_class[loc]
+            return out_array
+        elif out == 'flag':
+            out_array = flag[loc]
+            return out_array
+        else:
+            print('options for out= paramter are    main    flag')
+            return
 
 
     def hist(self):
@@ -73,9 +64,10 @@ class Plotter():
         xlabels = self.main_classes
         xticks = np.linspace(0,21,len(xlabels))
 
-        plt.figure(figsize=(9,9),facecolor='w')
+        plt.figure(figsize=(12,12),facecolor='w')
         ax = plt.subplot(111)
         ax.set_xticks(xticks,xlabels)
+        plt.xticks(rotation=30, ha='right')
         ax.bar(xticks[0],np.nansum(self.disk),color='gray')
         ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray')
         ax.bar(xticks[2],np.nansum(self.sph),color='gray')
