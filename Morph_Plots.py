@@ -45,22 +45,24 @@ class Plotter():
         plt.rcParams['ytick.minor.width'] = 2.
         plt.rcParams['hatch.linewidth'] = 2.5
 
-    def match_flags(self,main_class,flag,out='main'):
+    def match_flags(self,main_class,flag,out='main',output='array'):
 
         loc = (main_class == 1) & (flag == 1)
-        if out == 'main':
-            out_array = main_class[loc]
-            return out_array
-        elif out == 'flag':
-            out_array = flag[loc]
-            return out_array
-        else:
-            print('options for out= paramter are    main    flag')
-            return
+        if output == 'array':
+            if out == 'main':
+                out_array = main_class[loc]
+                return out_array
+            elif out == 'flag':
+                out_array = flag[loc]
+                return out_array
+            else:
+                print('options for out= paramter are    main    flag')
+                return
+        elif output == 'loc':
+            return loc
 
 
-    def hist(self):
-
+    def bar(self,savestring,flag='None',save=True):
         xlabels = self.main_classes
         xticks = np.linspace(0,21,len(xlabels))
 
@@ -68,13 +70,47 @@ class Plotter():
         ax = plt.subplot(111)
         ax.set_xticks(xticks,xlabels)
         plt.xticks(rotation=30, ha='right')
-        ax.bar(xticks[0],np.nansum(self.disk),color='gray')
-        ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray')
-        ax.bar(xticks[2],np.nansum(self.sph),color='gray')
-        ax.bar(xticks[3],np.nansum(self.irrg),color='gray')
-        ax.bar(xticks[4],np.nansum(self.ps),color='gray')
-        ax.bar(xticks[5],np.nansum(self.unc),color='gray')
-        ax.bar(xticks[6],np.nansum(self.blank),color='gray')
+        ax.bar(xticks[0],np.nansum(self.disk),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[2],np.nansum(self.sph),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[3],np.nansum(self.irrg),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[4],np.nansum(self.ps),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+
+        if flag == 'tf' or flag == 'TF':
+            ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+            ax.bar(xticks[1],np.nansum(self.disk_sph[self.match_flags(self.disk_sph,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.tf_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            plt.legend()
+
+        elif flag == 'ps' or flag == 'PS':
+            ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+            ax.bar(xticks[1],np.nansum(self.disk_sph[self.match_flags(self.disk_sph,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.ps_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            plt.legend()
+
+        elif flag == 'merger' or flag == 'Merger':
+            ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+            ax.bar(xticks[1],np.nansum(self.disk_sph[self.match_flags(self.disk_sph,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            plt.legend()
+
+
+        if save:
+            plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
         plt.show()
 
 
