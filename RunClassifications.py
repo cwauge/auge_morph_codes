@@ -61,14 +61,14 @@ print('PS_flag:       ',len(dict_out['PS_flag']),np.nansum(dict_out['PS_flag']))
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape)
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
-main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
+# main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
 # plot_shape.shape_class_bar('_new/bar_shape',flag='tf',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/bar_shape_frac',flag='tf',bins='shape',fractional='bin',save=True)
 # plot_shape.shape_class_bar('_new/bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
-# plot.bar('_new/total_bar_tf',flag='tf',save=False)
-# plot.bar('_new/total_bar_ps',flag='PS',save=False)
-# plot.bar('_new/total_bar_merg',flag='merger',save=False)
+plot.bar('_new/total_bar_tf',flag='tf',save=True)
+plot.bar('_new/total_bar_ps',flag='PS',save=True)
+plot.bar('_new/total_bar_merg',flag='merger',save=True)
 
