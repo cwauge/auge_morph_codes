@@ -9,6 +9,7 @@ from read_vis_class import Read_File
 from Morph_Plots import Plotter
 from Morph_Shape_Plots import Shape_Plotter
 from Morph_Display import Display
+from Morph_Display import main
 
 with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_ALL_F6_FINAL5.fits') as hdul:
     sed_cols = hdul[1].columns
@@ -22,7 +23,16 @@ sed_y = sed_data['y'][sed_field == 'COSMOS']
 sed_Lx = sed_data['Lx'][sed_field == 'COSMOS']
 sed_norm = sed_data['norm'][sed_field == 'COSMOS']
 sed_shape = sed_data['shape'][sed_field == 'COSMOS']
+check_sed = sed_data['check6'][sed_field == 'COSMOS']
 
+sed_id = sed_id[check_sed == 'GOOD']
+sed_z = sed_z[check_sed == 'GOOD'] 
+sed_x = sed_x[check_sed == 'GOOD']
+sed_y = sed_y[check_sed == 'GOOD']
+sed_Lx = sed_Lx[check_sed == 'GOOD']
+sed_norm = sed_norm[check_sed == 'GOOD']
+sed_shape = sed_shape[check_sed == 'GOOD']
+check_sed = check_sed[check_sed == 'GOOD']
 
 inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
 inf.open(type='xlsx')
@@ -50,7 +60,8 @@ print('PS_flag:       ',len(dict_out['PS_flag']),np.nansum(dict_out['PS_flag']))
 
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape)
-cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
+# cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
+main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
 # plot_shape.shape_class_bar('_new/bar_shape',flag='tf',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/bar_shape_frac',flag='tf',bins='shape',fractional='bin',save=True)
@@ -61,4 +72,3 @@ cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,
 # plot.bar('_new/total_bar_ps',flag='PS',save=False)
 # plot.bar('_new/total_bar_merg',flag='merger',save=False)
 
-cosmos_disp.open_image('COSMOS',sed_id)
