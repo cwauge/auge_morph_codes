@@ -79,10 +79,6 @@ class Read_File():
 
 
 
-            
-
-
-    
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Class to read the visual classification csv files and format them for analysis')
