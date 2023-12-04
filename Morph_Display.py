@@ -173,9 +173,6 @@ class Display(Shape_Plotter):
             ax.text(-0.05,-0.2127,f'                                                          {self.ps_flag_out[self.morph_id == Id][0]}',transform=ax.transAxes)
 
 
-
-
-
     def make_fig(self,Id,savestring,save,show):
         fig = plt.figure(figsize=(15,10))
         gs1 = fig.add_gridspec(nrows=1,ncols=1,left=0.075,right=0.425,top=0.8,bottom=0.25)
