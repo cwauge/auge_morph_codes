@@ -34,10 +34,12 @@ class Read_File():
 
         elif type =='xlsx':
             hdul = pd.read_excel(self.path+self.fname)
+            self.ffield = hdul['Field'].to_numpy()
             self.fnotes = hdul['Notes'].to_numpy()
             self.fID = hdul['ID'].to_numpy()
             hdul_no_notes = hdul.drop(labels='Notes',axis=1)
-            hdul_short = hdul_no_notes.drop(labels='ID',axis=1)
+            hdul_no_field = hdul_no_notes.drop(labels='Field',axis=1)
+            hdul_short = hdul_no_field.drop(labels='ID',axis=1)
             self.fcols = hdul_short.columns.to_numpy()
             self.fdata = hdul_short.to_numpy()
 
@@ -61,6 +63,9 @@ class Read_File():
     
     def IDs(self):
         return self.fID
+    
+    def field(self):
+        return self.ffield
     
     def x_to_one(self,array):
         array[array == 'x'] = 1.0
