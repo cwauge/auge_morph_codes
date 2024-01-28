@@ -33,7 +33,7 @@ class Plotter():
         self.tf_f = self.dict['TF_flag']
         self.ps_f = self.dict['PS_flag']
 
-        plt.rcParams['font.size'] = 18
+        plt.rcParams['font.size'] = 22
         plt.rcParams['axes.linewidth'] = 3.5
         plt.rcParams['xtick.major.size'] = 5
         plt.rcParams['xtick.major.width'] = 4
@@ -63,20 +63,20 @@ class Plotter():
 
 
     def bar(self,savestring,flag='None',save=True):
-        xlabels = self.main_classes
-        xticks = np.linspace(0,21,len(xlabels))
+        xlabels = self.main_classes[:-2]
+        xticks = np.linspace(0,15,len(xlabels))
 
         plt.figure(figsize=(12,12),facecolor='w')
         ax = plt.subplot(111)
         ax.set_xticks(xticks,xlabels)
-        plt.xticks(rotation=30, ha='right')
+        plt.xticks(rotation=25, ha='right')
         ax.bar(xticks[0],np.nansum(self.disk),color='gray',alpha=0.75,width=1.5)
         ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray',alpha=0.75,width=1.5)
         ax.bar(xticks[2],np.nansum(self.sph),color='gray',alpha=0.75,width=1.5)
         ax.bar(xticks[3],np.nansum(self.irrg),color='gray',alpha=0.75,width=1.5)
         ax.bar(xticks[4],np.nansum(self.ps),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -84,8 +84,8 @@ class Plotter():
             ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             plt.legend()
 
         elif flag == 'ps' or flag == 'PS':
@@ -94,8 +94,8 @@ class Plotter():
             ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.ps_f,output='loc')]),color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             plt.legend()
 
         elif flag == 'merger' or flag == 'Merger':
@@ -104,8 +104,8 @@ class Plotter():
             ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.merger_f,output='loc')]),color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
             plt.legend()
 
 
