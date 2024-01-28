@@ -44,7 +44,7 @@ class Shape_Plotter(Plotter):
         self.tf_f = self.dict['TF_flag']
         self.ps_f = self.dict['PS_flag']
 
-        plt.rcParams['font.size'] = 18
+        plt.rcParams['font.size'] = 21
         plt.rcParams['axes.linewidth'] = 3.5
         plt.rcParams['xtick.major.size'] = 5
         plt.rcParams['xtick.major.width'] = 4
@@ -145,8 +145,8 @@ class Shape_Plotter(Plotter):
         fig = plt.figure(figsize=(10,20),facecolor='w')
         gs = fig.add_gridspec(nrows=5, ncols=1, left=0.1, right=0.9, top=0.99, bottom=0.075, hspace=0.05)
 
-        xlabels = self.main_classes
-        xticks = np.linspace(0,21,len(xlabels))
+        xlabels = self.main_classes[:-2]
+        xticks = np.linspace(0,15,len(xlabels))
 
         ### set up subplot 1
         ax1 = fig.add_subplot(gs[0])
@@ -161,8 +161,8 @@ class Shape_Plotter(Plotter):
         ax1.bar(xticks[2],np.nansum(sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
         ax1.bar(xticks[3],np.nansum(irrg_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
         ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[6],np.nansum(blank_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[6],np.nansum(blank_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -170,9 +170,9 @@ class Shape_Plotter(Plotter):
             ax1.bar(xticks[2],np.nansum(sph_b1[self.match_flags(sph_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax1.bar(xticks[3],np.nansum(irrg_b1[self.match_flags(irrg_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax1.text(0.79, 0.77, f'n/N = {np.round(tf_flag_frac1)}%', transform=ax1.transAxes,color='r')
+            # ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.text(0.75, 0.73, f'n/N = {np.round(tf_flag_frac1)}%', transform=ax1.transAxes,color='r')
 
         elif flag == 'ps' or flag == 'PS':
             ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
@@ -208,8 +208,8 @@ class Shape_Plotter(Plotter):
         ax2.bar(xticks[2],np.nansum(sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
         ax2.bar(xticks[3],np.nansum(irrg_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
         ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -217,9 +217,9 @@ class Shape_Plotter(Plotter):
             ax2.bar(xticks[2],np.nansum(sph_b2[self.match_flags(sph_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax2.bar(xticks[3],np.nansum(irrg_b2[self.match_flags(irrg_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax2.text(0.79, 0.82, f'n/N = {np.round(tf_flag_frac2)}%', transform=ax2.transAxes,color='r')
+            # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax2.text(0.75, 0.82, f'n/N = {np.round(tf_flag_frac2)}%', transform=ax2.transAxes,color='r')
 
 
         elif flag == 'ps' or flag == 'PS':
@@ -239,8 +239,8 @@ class Shape_Plotter(Plotter):
             ax2.bar(xticks[2],np.nansum(sph_b2[self.match_flags(sph_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             ax2.bar(xticks[3],np.nansum(irrg_b2[self.match_flags(irrg_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
             ax2.text(0.85, 0.82, f'n = {np.round(merg_flag_frac2)}', transform=ax2.transAxes,color='g')
 
 
@@ -258,8 +258,8 @@ class Shape_Plotter(Plotter):
         ax3.bar(xticks[2],np.nansum(sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
         ax3.bar(xticks[3],np.nansum(irrg_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
         ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -267,9 +267,9 @@ class Shape_Plotter(Plotter):
             ax3.bar(xticks[2],np.nansum(sph_b3[self.match_flags(sph_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax3.bar(xticks[3],np.nansum(irrg_b3[self.match_flags(irrg_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax3.text(0.79, 0.82, f'n/N = {np.round(tf_flag_frac3)}%', transform=ax3.transAxes,color='r')
+            # ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.text(0.75, 0.82, f'n/N = {np.round(tf_flag_frac3)}%', transform=ax3.transAxes,color='r')
 
         elif flag == 'ps' or flag == 'PS':
             ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
@@ -305,8 +305,8 @@ class Shape_Plotter(Plotter):
         ax4.bar(xticks[2],np.nansum(sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
         ax4.bar(xticks[3],np.nansum(irrg_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
         ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -314,9 +314,9 @@ class Shape_Plotter(Plotter):
             ax4.bar(xticks[2],np.nansum(sph_b4[self.match_flags(sph_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax4.bar(xticks[3],np.nansum(irrg_b4[self.match_flags(irrg_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax4.text(0.79, 0.82, f'n/N = {np.round(tf_flag_frac4)}%', transform=ax4.transAxes,color='r')
+            # ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax4.text(0.75, 0.82, f'n/N = {np.round(tf_flag_frac4)}%', transform=ax4.transAxes,color='r')
 
         elif flag == 'ps' or flag == 'PS':
             ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
@@ -353,8 +353,8 @@ class Shape_Plotter(Plotter):
         ax5.bar(xticks[2],np.nansum(sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
         ax5.bar(xticks[3],np.nansum(irrg_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
         ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
 
         if flag == 'tf' or flag == 'TF':
             ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -362,9 +362,9 @@ class Shape_Plotter(Plotter):
             ax5.bar(xticks[2],np.nansum(sph_b5[self.match_flags(sph_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax5.bar(xticks[3],np.nansum(irrg_b5[self.match_flags(irrg_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax5.text(0.79, 0.82, f'n/N = {np.round(tf_flag_frac5)}%', transform=ax5.transAxes,color='r')
+            # ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            # ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax5.text(0.75, 0.82, f'n/N = {np.round(tf_flag_frac5)}%', transform=ax5.transAxes,color='r')
 
         elif flag == 'ps' or flag == 'PS':
             ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')

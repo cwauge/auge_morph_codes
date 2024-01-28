@@ -65,7 +65,7 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
-plot_shape.shape_class_bar('_new/total_bar_shape_tf',flag='tf',bins='shape',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_tf2',flag='tf',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
