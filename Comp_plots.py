@@ -22,6 +22,11 @@ class Morph_Compare(Plotter):
         self.in_dict = in_dict
         self.auge_keys = ['Disk','Disk-Spheroid','Spheroid','Irregular','PS','Unclassifiable','Blank','Merger_flag','TF_flag','PS_flag']
 
+    def Auge_to_Auge(self):
+        Auge_keys = list(self.in_dict.keys())
+
+
+
     def Jarvis_to_Auge(self):
         Jarvis_keys = list(self.in_dict.keys())
 
@@ -35,3 +40,15 @@ class Morph_Compare(Plotter):
     def Candels_to_Auge(self):
         Candels_keys = list(self.in_dict.keys())
 
+    def prep_dict(self):
+        dict_vaues = list(self.in_dict.values())
+
+
+    def hist_comp_2D(self):
+
+        fig = plt.figure(figsize=(9,9))
+        gs = fig.add_gridspec(nrows=1,ncols=2,width_ratios=[3,0.15])
+
+        ax = fig.add_subplot(gs[0])
+
+    
