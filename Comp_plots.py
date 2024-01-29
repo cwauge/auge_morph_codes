@@ -41,7 +41,13 @@ class Morph_Compare(Plotter):
         Candels_keys = list(self.in_dict.keys())
 
     def prep_dict(self):
-        dict_vaues = list(self.in_dict.values())
+        dict_vaues = list(self.in_dict.values()) # I don't think I need this. 
+        # I think I need a 1 d array for each classifier, where every index is a differnt source
+        # and every value in the index is a string or number that corresponds to the classification. 
+        # I currently have individual arrays for each classification now (from Plotter class)
+        # and a dictionary of these same arrays for my new input class
+        # Take each array and add a value to it to change each classification to it's own number
+        # Then collapse or concatinate the arrays together for a single, 1-D array. 
 
 
     def hist_comp_2D(self):
