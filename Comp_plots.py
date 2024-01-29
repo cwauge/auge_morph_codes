@@ -24,21 +24,28 @@ class Morph_Compare(Plotter):
 
     def Auge_to_Auge(self):
         Auge_keys = list(self.in_dict.keys())
-
-
+        Auge_values = list(self.in_dict.values())
+        self.keys = Auge_keys
+        self.values = Auge_values
 
     def Jarvis_to_Auge(self):
         Jarvis_keys = list(self.in_dict.keys())
-
-
+        Jarvis_values = list(self.in_dict.values())
+        self.keys = Jarvis_keys
+        self.values = Jarvis_values
     
     def Wolf_to_Auge(self):
         Wolf_keys = list(self.in_dict.keys())
-
-
+        Wolf_values = list(self.in_dict.values())
+        self.keys = Wolf_keys
+        self.values = Wolf_values
 
     def Candels_to_Auge(self):
         Candels_keys = list(self.in_dict.keys())
+        Candels_values = list(self.in_dict.values())
+        self.keys = Candels_keys
+        self.values = Candels_values
+
 
     def prep_dict(self):
         dict_vaues = list(self.in_dict.values()) # I don't think I need this. 
@@ -48,6 +55,19 @@ class Morph_Compare(Plotter):
         # and a dictionary of these same arrays for my new input class
         # Take each array and add a value to it to change each classification to it's own number
         # Then collapse or concatinate the arrays together for a single, 1-D array. 
+
+        # For this to work I need a different function that will change the keys of the in_dict 
+        # to match my classification scheme
+        in_disk = self.in_dict['Disk']
+        in_disk_sph = self.in_dict['Disk-Spheroid']
+        in_sph = self.in_dict['Spheroid']
+        in_irrg = self.in_dict['Irregular']
+        in_ps = self.in_dict['PS']
+        in_unc = self.in_dict['Unclassifiable']
+        in_blank = self.in_dict['Blank']
+        in_merger_f = self.in_dict['Merger_flag']
+        in_tf_f = self.in_dict['TF_flag']
+        in_ps_f = self.in_dict['PS_flag']
 
 
     def hist_comp_2D(self):
