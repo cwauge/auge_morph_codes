@@ -18,9 +18,21 @@ class Morph_Compare(Plotter):
     Need a function to translate each of the variety of classifications used for different clssifiers
     '''
 
-    def __init__(self,in_dict):
+    def __init__(self,auge_dict,in_dict):
         self.in_dict = in_dict
-        self.auge_keys = ['Disk','Disk-Spheroid','Spheroid','Irregular','PS','Unclassifiable','Blank','Merger_flag','TF_flag','PS_flag']
+        self.auge_keys = list(auge_dict.keys())
+        self.dict = auge_dict
+
+        self.disk = self.dict['Disk']
+        self.disk_sph = self.dict['Disk-Spheroid']
+        self.sph = self.dict['Spheroid']
+        self.irrg = self.dict['Irregular']
+        self.ps = self.dict['PS']
+        self.unc = self.dict['Unclassifiable']
+        self.blank = self.dict['Blank']
+        self.merger_f = self.dict['Merger_flag']
+        self.tf_f = self.dict['TF_flag']
+        self.ps_f = self.dict['PS_flag']
 
     def Auge_to_Auge(self):
         Auge_keys = list(self.in_dict.keys())
@@ -71,11 +83,12 @@ class Morph_Compare(Plotter):
         in_ps = self.in_dict['PS']+4
         in_unc = self.in_dict['Unclassifiable']+5
         in_blank = self.in_dict['Blank']+6
-        in_merger_f = self.in_dict['Merger_flag']+7
-        in_tf_f = self.in_dict['TF_flag']+8
-        in_ps_f = self.in_dict['PS_flag']+9
+        # in_merger_f = self.in_dict['Merger_flag']+7
+        # in_tf_f = self.in_dict['TF_flag']+8
+        # in_ps_f = self.in_dict['PS_flag']+9
 
-        self.disk = self.disk+0
+        print(in_disk)
+
         self.disk_sph += 1
         self.sph += 2
         self.irrg += 3
@@ -85,26 +98,46 @@ class Morph_Compare(Plotter):
         self.merger_f += 7
         self.tf_f += 8
         self.ps_f += 9
+        # for i in range(len(self.disk)):
+            # print(self.disk[i],self.disk_sph[i],self.sph[i],self.irrg[i],self.ps[i],self.unc[i])
 
-        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc])
+        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc],dtype=float)
+        auge_numb_array[np.isnan(auge_numb_array)] = 0
         auge_numb_1d = np.sum(auge_numb_array,axis=0)
-
-        in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc])
-        in_numb_1d = np.sum(in_numb_array)
+        # auge_numb_1d = np.concatenate(auge_numb_array)
+        in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
+        in_numb_array[np.isnan(in_numb_array)] = 0
+        in_numb_1d = np.sum(in_numb_array,axis=0)
+        # in_numb_1d = np.concatenate(in_numb_array)
 
         return auge_numb_1d, in_numb_1d
 
 
+    def hist_comp_2D(self,x_in,y_in):
+
+        x, y = self.prep_dict()
+
+        x = x[y != 0]
+        y = y[y != 0]
 
 
-
-    def hist_comp_2D(self,x,y):
+        xticks = [1,2,3,4,5,6]
+        xlabels=['D','Ds','S','Ir','PS','Unc']
 
         fig = plt.figure(figsize=(9,9))
         # gs = fig.add_gridspec(nrows=1,ncols=2,width_ratios=[3,0.15])
 
-        ax = fig.add_subplot(gs[0])
-        plt.hist2d(x,y)
+        # ax = fig.add_subplot(gs[0])
+        ax = fig.add_subplot(111)
+        plt.hist2d(x,y,bins=np.arange(0,7))
+        # plt.xlabel(xlabels)
+        # plt.ylabel(xlabels)
+        ax.set_xticklabels(xlabels)
+        ax.set_yticklabels(xlabels)
+        ax.set_xticks(xticks)
+        ax.set_yticks(xticks)
+        plt.xlim(0,6)
+        plt.ylim(0,6)
         plt.colorbar()
         plt.show()
 
