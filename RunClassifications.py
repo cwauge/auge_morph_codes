@@ -9,6 +9,7 @@ from read_vis_class import Read_File
 from Morph_Plots import Plotter
 from Morph_Shape_Plots import Shape_Plotter
 from Morph_Display import Display
+from Comp_plots import Morph_Compare
 from Morph_Display import main
 
 with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_ALL_F6_FINAL5.fits') as hdul:
@@ -35,7 +36,7 @@ sed_shape = sed_shape[check_sed == 'GOOD']
 check_sed = check_sed[check_sed == 'GOOD']
 
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
-inf = Read_File('Auge_Classifications_read_total.xlsx')
+inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
 inf.open(type='xlsx')
 
 cols = inf.columns() # Columns of file. Name of classification
@@ -59,13 +60,26 @@ print('Merger_flag:   ',len(dict_out['Merger_flag']),np.nansum(dict_out['Merger_
 print('TF_flag:       ',len(dict_out['TF_flag']),np.nansum(dict_out['TF_flag']))
 print('PS_flag:       ',len(dict_out['PS_flag']),np.nansum(dict_out['PS_flag']))
 
+inf2 = Read_File('COSMOS_HSC_read.xlsx')
+inf2.open(type='xlsx')
+
+cols2 = inf2.columns()
+data2 = inf2.data()
+morph_ID2 = inf2.IDs()
+# morph_field2 = inf2.field()
+
+dict_out2 = inf2.make_dict(cols2,data2,transpose=True)
+
 
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
+plot_comp = Morph_Compare(dict_out,dict_out2)
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
-plot_shape.shape_class_bar('_new/total_bar_shape_tf2',flag='tf',bins='shape',save=True)
+plot_comp.hist_comp_2D(dict_out,dict_out2)
+
+# plot_shape.shape_class_bar('_new/total_bar_shape_tf2',flag='tf',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
@@ -73,7 +87,7 @@ plot_shape.shape_class_bar('_new/total_bar_shape_tf2',flag='tf',bins='shape',sav
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
-plot.bar('_new/total_bar_tf',flag='tf',save=True)
+# plot.bar('_new/total_bar_tf',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
 # plot.bar('_new/total_bar_merg',flag='merger',save=True)
 
