@@ -34,11 +34,9 @@ class Morph_Compare(Plotter):
         self.tf_f = self.dict['TF_flag']
         self.ps_f = self.dict['PS_flag']
 
-    def Auge_to_Auge(self):
-        Auge_keys = list(self.in_dict.keys())
-        Auge_values = list(self.in_dict.values())
-        self.keys = Auge_keys
-        self.values = Auge_values
+        print('here')
+        print(self.disk[0:20])
+        print(self.blank[0:20])
 
     def Jarvis_to_Auge(self):
         Jarvis_keys = list(self.in_dict.keys())
@@ -51,6 +49,56 @@ class Morph_Compare(Plotter):
         Wolf_values = list(self.in_dict.values())
         self.keys = Wolf_keys
         self.values = Wolf_values
+
+
+        mc = []
+        for i in range(len(Wolf_values[0])):
+            if ~np.isnan(self.in_dict['Unclassifiable'][i]):
+                mc.append(6) # unc
+            
+            elif ~np.isnan(self.in_dict['Disk'][i]):
+                if np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
+                    mc.append(1) # disk
+                elif ~np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
+                    mc.append(2) # disk sph
+                elif np.isnan(self.in_dict['Sph_prom'][i]) & ~np.isnan(self.in_dict['Sph_notic'][i]):
+                    mc.append(1) # disk
+
+            elif np.isnan(self.in_dict['Disk'][i]):
+                if np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
+                    if ~np.isnan(self.in_dict['Merger'][i]):
+                        mc.append(4) # irreg
+                    elif ~np.isnan(self.in_dict['ps'][i]) & np.isnan(self.in_dict['Merger'][i]):
+                        mc.append(5) # ps
+                    else:
+                        mc.append(-99)
+
+                elif ~np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
+                    mc.append(3) # sph
+                elif np.isnan(self.in_dict['Sph_prom'][i]) & ~np.isnan(self.in_dict['Sph_notic'][i]):
+                    mc.append(3) # sph
+            else:
+                mc.append(7)
+
+        mc = np.asarray(mc,dtype=float)
+
+        self.disk_sph += 1
+        self.sph += 2
+        self.irrg += 3
+        self.ps += 4
+        self.unc += 5
+        self.blank += 5
+        self.merger_f += 7
+        self.tf_f += 8
+        self.ps_f += 9
+        # for i in range(len(self.disk)):
+            # print(self.disk[i],self.disk_sph[i],self.sph[i],self.irrg[i],self.ps[i],self.unc[i])
+
+        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc,self.blank],dtype=float)
+        auge_numb_array[np.isnan(auge_numb_array)] = 0
+        auge_numb_1d = np.sum(auge_numb_array,axis=0)
+
+        return auge_numb_1d, mc
 
     def Candels_to_Auge(self):
         Candels_keys = list(self.in_dict.keys())
@@ -65,7 +113,7 @@ class Morph_Compare(Plotter):
                 # etc. 
 
 
-    def prep_dict(self):
+    def Auge_to_Auge(self):
         dict_vaues = list(self.in_dict.values()) # I don't think I need this. 
         # I think I need a 1 d array for each classifier, where every index is a differnt source
         # and every value in the index is a string or number that corresponds to the classification. 
@@ -82,28 +130,29 @@ class Morph_Compare(Plotter):
         in_irrg = self.in_dict['Irregular']+3
         in_ps = self.in_dict['PS']+4
         in_unc = self.in_dict['Unclassifiable']+5
-        in_blank = self.in_dict['Blank']+6
+        in_blank = self.in_dict['Blank']+5
         # in_merger_f = self.in_dict['Merger_flag']+7
         # in_tf_f = self.in_dict['TF_flag']+8
         # in_ps_f = self.in_dict['PS_flag']+9
-
-        print(in_disk)
-
         self.disk_sph += 1
         self.sph += 2
         self.irrg += 3
         self.ps += 4
         self.unc += 5
-        self.blank += 6
+        self.blank += 5
         self.merger_f += 7
         self.tf_f += 8
         self.ps_f += 9
         # for i in range(len(self.disk)):
             # print(self.disk[i],self.disk_sph[i],self.sph[i],self.irrg[i],self.ps[i],self.unc[i])
 
-        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc],dtype=float)
+        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc,self.blank],dtype=float)
         auge_numb_array[np.isnan(auge_numb_array)] = 0
         auge_numb_1d = np.sum(auge_numb_array,axis=0)
+
+        print('auge array')
+        print(auge_numb_array)
+
         # auge_numb_1d = np.concatenate(auge_numb_array)
         in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
         in_numb_array[np.isnan(in_numb_array)] = 0
@@ -113,15 +162,28 @@ class Morph_Compare(Plotter):
         return auge_numb_1d, in_numb_1d
 
 
-    def hist_comp_2D(self,x_in,y_in):
+    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
 
-        x, y = self.prep_dict()
+        print(np.shape(IDx),np.shape(x_in))
+        print(np.shape(IDy),np.shape(y_in))
+
+        if match_IDs:
+            ix, iy = match(IDx,IDy)
+            x = x_in[ix]
+            y = y_in[iy]
+            IDx, IDy = IDx[ix], IDy[iy]
+        else:
+            x = x_in
+            y = y_in
 
         x = x[y != 0]
         y = y[y != 0]
+        print(IDy)
 
+        print(x)
+        print(y)
 
-        xticks = [1,2,3,4,5,6]
+        xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
         xlabels=['D','Ds','S','Ir','PS','Unc']
 
         fig = plt.figure(figsize=(9,9))
@@ -129,15 +191,17 @@ class Morph_Compare(Plotter):
 
         # ax = fig.add_subplot(gs[0])
         ax = fig.add_subplot(111)
-        plt.hist2d(x,y,bins=np.arange(0,7))
+        plt.hist2d(x,y,bins=np.arange(0,8))
         # plt.xlabel(xlabels)
         # plt.ylabel(xlabels)
         ax.set_xticklabels(xlabels)
         ax.set_yticklabels(xlabels)
         ax.set_xticks(xticks)
         ax.set_yticks(xticks)
-        plt.xlim(0,6)
-        plt.ylim(0,6)
+        plt.xlim(1,7)
+        plt.ylim(1,7)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         plt.colorbar()
         plt.show()
 
