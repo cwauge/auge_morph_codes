@@ -49,6 +49,10 @@ inf.x_to_one(data)   # Turn the Xs in the data array to 1s
 # Make a dictionary with Keys as classification and values as arrays for classification of each source
 dict_out = inf.make_dict(cols,data,transpose=True)
 
+print('check: ID', morph_ID[0:20])
+print('check: Disk', dict_out['Disk'][0:20])
+print('check: blank', dict_out['Blank'][0:20])
+
 print('Disk:          ',len(dict_out['Disk']),np.nansum(dict_out['Disk']))
 print('Disk-Spheroid: ',len(dict_out['Disk-Spheroid']),np.nansum(dict_out['Disk-Spheroid']))
 print('Spheroid:      ',len(dict_out['Spheroid']),np.nansum(dict_out['Spheroid']))
@@ -71,13 +75,36 @@ morph_ID2 = inf2.IDs()
 dict_out2 = inf2.make_dict(cols2,data2,transpose=True)
 
 
+wolf_inf = Read_File('read_Aurelie_Classifications_all.xlsx',path='/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/')
+wolf_inf.open(type='xlsx')
+wolf_cols = wolf_inf.columns()
+wolf_data = wolf_inf.data()
+wolf_ID = wolf_inf.IDs()
+
+wolf_ID_out = []
+for i in range(len(wolf_ID)):
+    if type(wolf_ID[i]) == str:
+        wolf_ID_out.append(wolf_ID[i][4:])
+    else:
+        np.delete(wolf_data,i,0)
+wolf_ID_out = np.asarray(wolf_ID_out,dtype=int)
+
+wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
+
+
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
-plot_comp = Morph_Compare(dict_out,dict_out2)
+
+# plot_comp = Morph_Compare(dict_out,dict_out2)
+# auge_x, auge_y = plot_comp.Auge_to_Auge()
+# plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID2)
+
+wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
+wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
+wolf_plot_comp.hist_comp_2D(wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
+
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
-
-plot_comp.hist_comp_2D(dict_out,dict_out2)
 
 # plot_shape.shape_class_bar('_new/total_bar_shape_tf2',flag='tf',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
