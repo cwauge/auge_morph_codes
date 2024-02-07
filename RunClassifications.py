@@ -64,15 +64,25 @@ print('Merger_flag:   ',len(dict_out['Merger_flag']),np.nansum(dict_out['Merger_
 print('TF_flag:       ',len(dict_out['TF_flag']),np.nansum(dict_out['TF_flag']))
 print('PS_flag:       ',len(dict_out['PS_flag']),np.nansum(dict_out['PS_flag']))
 
-inf2 = Read_File('COSMOS_HSC_read.xlsx')
-inf2.open(type='xlsx')
+inf_jwst = Read_File('All_JWST_read.xlsx')
+inf_jwst.open(type='xlsx')
 
-cols2 = inf2.columns()
-data2 = inf2.data()
-morph_ID2 = inf2.IDs()
+cols_jwst = inf_jwst.columns()
+data_jwst = inf_jwst.data()
+ID_jwst = inf_jwst.IDs()
+
+inf_jwst.x_to_one(data_jwst)
+dict_jwst = inf.make_dict(cols_jwst,data_jwst,transpose=True)
+
+inf_hsc = Read_File('COSMOS_HSC_read.xlsx')
+inf_hsc.open(type='xlsx')
+
+cols_hsc = inf_hsc.columns()
+data_hsc = inf_hsc.data()
+morph_ID_hsc = inf_hsc.IDs()
 # morph_field2 = inf2.field()
 
-dict_out2 = inf2.make_dict(cols2,data2,transpose=True)
+dict_out2 = inf_hsc.make_dict(cols_hsc,data_hsc,transpose=True)
 
 
 wolf_inf = Read_File('read_Aurelie_Classifications_all.xlsx',path='/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/')
@@ -97,11 +107,11 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 
 # plot_comp = Morph_Compare(dict_out,dict_out2)
 # auge_x, auge_y = plot_comp.Auge_to_Auge()
-# plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID2)
+# plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
 
-wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
-wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
-wolf_plot_comp.hist_comp_2D(wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
+# wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
+# wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
+# wolf_plot_comp.hist_comp_2D(wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
 
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
