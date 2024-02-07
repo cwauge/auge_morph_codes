@@ -34,11 +34,22 @@ class Read_File():
 
         elif type =='xlsx':
             hdul = pd.read_excel(self.path+self.fname)
-            self.ffield = hdul['Field'].to_numpy()
-            self.fnotes = hdul['Notes'].to_numpy()
+            
+            try:
+                self.fnotes = hdul['Notes'].to_numpy()
+                hdul_no_notes = hdul.drop(labels='Notes',axis=1)
+            except KeyError:
+                self.fnotes = ['No notes in file']
+                hdul_no_notes = hdul
+            try:
+                self.ffield = hdul['Field'].to_numpy()
+                hdul_no_field = hdul_no_notes.drop(labels='Field',axis=1)
+            except KeyError:
+                self.ffield = ['No field specified in file']
+                hdul_no_field = hdul
+            
             self.fID = hdul['ID'].to_numpy()
-            hdul_no_notes = hdul.drop(labels='Notes',axis=1)
-            hdul_no_field = hdul_no_notes.drop(labels='Field',axis=1)
+            
             hdul_short = hdul_no_field.drop(labels='ID',axis=1)
             self.fcols = hdul_short.columns.to_numpy()
             self.fdata = hdul_short.to_numpy()
