@@ -36,13 +36,15 @@ sed_shape = sed_shape[check_sed == 'GOOD']
 check_sed = check_sed[check_sed == 'GOOD']
 
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
-inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
+inf = Read_File('Auge_Classifications_read_total.xlsx')
 inf.open(type='xlsx')
 
 cols = inf.columns() # Columns of file. Name of classification
 data = inf.data()    # Data of file. Array of nans and Xs. No IDs or notes
 morph_ID = inf.IDs()       # ID column of file
 morph_field = inf.field()
+
+morph_ID[morph_field == 'GOODSS'] += 0.5
 
 inf.x_to_one(data)   # Turn the Xs in the data array to 1s
 
@@ -70,6 +72,9 @@ inf_jwst.open(type='xlsx')
 cols_jwst = inf_jwst.columns()
 data_jwst = inf_jwst.data()
 ID_jwst = inf_jwst.IDs()
+field_jwst = inf_jwst.field()
+
+ID_jwst[field_jwst == 'GOODSS'] += 0.5
 
 inf_jwst.x_to_one(data_jwst)
 dict_jwst = inf.make_dict(cols_jwst,data_jwst,transpose=True)
@@ -82,7 +87,7 @@ data_hsc = inf_hsc.data()
 morph_ID_hsc = inf_hsc.IDs()
 # morph_field2 = inf2.field()
 
-dict_out2 = inf_hsc.make_dict(cols_hsc,data_hsc,transpose=True)
+dict_out_hsc = inf_hsc.make_dict(cols_hsc,data_hsc,transpose=True)
 
 
 wolf_inf = Read_File('read_Aurelie_Classifications_all.xlsx',path='/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/')
@@ -105,9 +110,13 @@ wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
-# plot_comp = Morph_Compare(dict_out,dict_out2)
-# auge_x, auge_y = plot_comp.Auge_to_Auge()
-# plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
+# hsc)plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+# auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
+# hsc_plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
+
+jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
+auge_x, jwst_y = jwst_plot_comp.Auge_to_Auge()
+jwst_plot_comp.hist_comp_2D(auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
 
 # wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
 # wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
