@@ -64,7 +64,6 @@ class Display(Shape_Plotter):
     def find_class(self,id):
         # print(self.disk[self.morph_id == id])
         if self.disk[self.morph_id == id] == 1:
-            # print('disk')
             self.classification = 'Disk'
         elif self.disk_sph[self.morph_id == id] == 1:
             self.classification = 'Disk-Spheroid'
