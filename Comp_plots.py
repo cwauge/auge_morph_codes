@@ -162,10 +162,7 @@ class Morph_Compare(Plotter):
         return auge_numb_1d, in_numb_1d
 
 
-    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None):
-
-        print(np.shape(IDx),np.shape(x_in))
-        print(np.shape(IDy),np.shape(y_in))
+    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
 
         if match_IDs:
             ix, iy = match(IDx,IDy)
@@ -176,6 +173,7 @@ class Morph_Compare(Plotter):
             x = x_in
             y = y_in
 
+
         x = x[y != 0]
         y = y[y != 0]
 
@@ -183,9 +181,7 @@ class Morph_Compare(Plotter):
         xlabels=['D','Ds','S','Ir','PS','Unc']
 
         fig = plt.figure(figsize=(9,9))
-        # gs = fig.add_gridspec(nrows=1,ncols=2,width_ratios=[3,0.15])
 
-        # ax = fig.add_subplot(gs[0])
         ax = fig.add_subplot(111)
         plt.hist2d(x,y,bins=np.arange(0,8))
         ax.set_xticklabels(xlabels)
@@ -200,7 +196,67 @@ class Morph_Compare(Plotter):
         plt.colorbar()
         plt.show()
 
-        # cax = fig.add_subplot(gs[1])
+
+    def hist_comp_2D_split(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None,cond_lim=None):
+
+        if match_IDs:
+            ix, iy = match(IDx,IDy)
+            x = x_in[ix]
+            y = y_in[iy]
+            IDx, IDy = IDx[ix], IDy[iy]
+        else:
+            x = x_in
+            y = y_in
+
+        if cond:
+            split_sample_upper = cond_var > cond_lim
+            split_sample_lower = cond_var < cond_lim
+
+            x1 = x[split_sample_lower]
+            y1 = y[split_sample_lower]
+
+            x2 = x[split_sample_upper]
+            y2 = y[split_sample_upper]
+
+
+        x = x[y != 0]
+        y = y[y != 0]
+
+        xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
+        xlabels=['D','Ds','S','Ir','PS','Unc']
+
+        fig = plt.figure(figsize=(16,8))
+        gs = fig.add_gridspec(nrows=1,ncols=2)
+
+        ax1 = fig.add_subplot(gs[0])
+        ax1.hist2d(x1,y1,bins=np.arange(0,8))
+        ax1.set_xticklabels(xlabels)
+        ax1.set_yticklabels(xlabels)
+        ax1.set_xticks(xticks)
+        ax1.set_yticks(xticks)
+        ax1.set_title(f'z < {cond_lim}')
+        ax1.set_xlim(1,7)
+        ax1.set_ylim(1,7)
+        ax1.set_xlabel(xlabel)
+        ax1.set_ylabel(ylabel)
+        ax1.colorbar()
+
+        ax2 = fig.add_subplot(gs[1])
+        ax2.hist2d(x2,y3,bins=np.arange(0,8))
+        ax2.set_xticklabels(xlabels)
+        ax2.set_yticklabels(xlabels)
+        ax2.set_xticks(xticks)
+        ax2.set_yticks(xticks)
+        ax2.set_title(f'{cond_lim} < z')
+        ax2.set_xlim(1,7)
+        ax2.set_ylim(1,7)
+        ax2.set_xlabel(xlabel)
+        ax2.set_ylabel(ylabel)
+        ax2.colorbar()
+        plt.show()
+
+
+
 
 
 
