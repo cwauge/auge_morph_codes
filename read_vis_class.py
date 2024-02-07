@@ -80,7 +80,9 @@ class Read_File():
     
     def x_to_one(self,array):
         array[array == 'x'] = 1.0
+        array[array == ' '] = 0.0
         array = np.asarray(array,dtype=float)
+
 
     def make_dict(self,keys,array,transpose=False):
         dict_out = dict.fromkeys(keys)
