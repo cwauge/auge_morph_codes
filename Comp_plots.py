@@ -162,7 +162,7 @@ class Morph_Compare(Plotter):
         return auge_numb_1d, in_numb_1d
 
 
-    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
+    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None):
 
         print(np.shape(IDx),np.shape(x_in))
         print(np.shape(IDy),np.shape(y_in))
@@ -178,10 +178,6 @@ class Morph_Compare(Plotter):
 
         x = x[y != 0]
         y = y[y != 0]
-        print(IDy)
-
-        print(x)
-        print(y)
 
         xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
         xlabels=['D','Ds','S','Ir','PS','Unc']
@@ -192,12 +188,11 @@ class Morph_Compare(Plotter):
         # ax = fig.add_subplot(gs[0])
         ax = fig.add_subplot(111)
         plt.hist2d(x,y,bins=np.arange(0,8))
-        # plt.xlabel(xlabels)
-        # plt.ylabel(xlabels)
         ax.set_xticklabels(xlabels)
         ax.set_yticklabels(xlabels)
         ax.set_xticks(xticks)
         ax.set_yticks(xticks)
+        plt.title(f'N = {len(x)}')
         plt.xlim(1,7)
         plt.ylim(1,7)
         plt.xlabel(xlabel)
