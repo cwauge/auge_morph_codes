@@ -110,17 +110,21 @@ wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
-# hsc)plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+# hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
 # auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-# hsc_plot_comp.hist_comp_2D(auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
+# hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
+# hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
-jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
-auge_x, jwst_y = jwst_plot_comp.Auge_to_Auge()
-jwst_plot_comp.hist_comp_2D(auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
+
+# jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
+# auge_x, jwst_y = jwst_plot_comp.Auge_to_Auge()
+# jwst_plot_comp.hist_comp_2D('jwst_comp',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
+# jwst_plot_comp.hist_comp_2D_split('jwst_comp_zbin',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 # wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
 # wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
-# wolf_plot_comp.hist_comp_2D(wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
+# wolf_plot_comp.hist_comp_2D('wolf_comp',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
+# wolf_plot_comp.hist_comp_2D_split('jwst_comp_zbin',wolf_x, wolf_y, xlabel='Auge Classifications', ylabel='Wolf Classifications', IDx=morph_ID, IDy=wolf_ID,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')

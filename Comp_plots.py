@@ -5,6 +5,8 @@ Class to generate plots to compare different morphology classifications
 
 import numpy as np 
 import matplotlib.pyplot as plt 
+import matplotlib.gridspec as gridspec
+from matplotlib.collections import LineCollection
 from match import match
 from Morph_Plots import Plotter
 
@@ -162,7 +164,7 @@ class Morph_Compare(Plotter):
         return auge_numb_1d, in_numb_1d
 
 
-    def hist_comp_2D(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
+    def hist_comp_2D(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
 
         if match_IDs:
             ix, iy = match(IDx,IDy)
@@ -194,23 +196,25 @@ class Morph_Compare(Plotter):
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.colorbar()
+        plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
 
 
-    def hist_comp_2D_split(self,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None,cond_lim=None):
+    def hist_comp_2D_split(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None,cond_lim=None):
 
         if match_IDs:
             ix, iy = match(IDx,IDy)
             x = x_in[ix]
             y = y_in[iy]
             IDx, IDy = IDx[ix], IDy[iy]
+            cond_var_match = cond_var[ix]
         else:
             x = x_in
             y = y_in
 
         if cond:
-            split_sample_upper = cond_var > cond_lim
-            split_sample_lower = cond_var < cond_lim
+            split_sample_upper = cond_var_match > cond_lim
+            split_sample_lower = cond_var_match < cond_lim
 
             x1 = x[split_sample_lower]
             y1 = y[split_sample_lower]
@@ -225,11 +229,11 @@ class Morph_Compare(Plotter):
         xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
         xlabels=['D','Ds','S','Ir','PS','Unc']
 
-        fig = plt.figure(figsize=(16,8))
-        gs = fig.add_gridspec(nrows=1,ncols=2)
+        fig = plt.figure(figsize=(18,8))
+        gs = fig.add_gridspec(nrows=1,ncols=4,width_ratios=[3,0.25,3,0.25],wspace=0.35)
 
         ax1 = fig.add_subplot(gs[0])
-        ax1.hist2d(x1,y1,bins=np.arange(0,8))
+        h11,x11,y11,i11 = ax1.hist2d(x1,y1,bins=np.arange(0,8))
         ax1.set_xticklabels(xlabels)
         ax1.set_yticklabels(xlabels)
         ax1.set_xticks(xticks)
@@ -239,10 +243,14 @@ class Morph_Compare(Plotter):
         ax1.set_ylim(1,7)
         ax1.set_xlabel(xlabel)
         ax1.set_ylabel(ylabel)
-        ax1.colorbar()
 
-        ax2 = fig.add_subplot(gs[1])
-        ax2.hist2d(x2,y3,bins=np.arange(0,8))
+        cb_ax1 = fig.add_subplot(gs[1])
+        cb1 = fig.colorbar(i11, cax=cb_ax1)
+        cb1.mappable.set_clim(0,5)
+
+
+        ax2 = fig.add_subplot(gs[2])
+        h22,x22,y22,i22 = ax2.hist2d(x2,y2,bins=np.arange(0,8))
         ax2.set_xticklabels(xlabels)
         ax2.set_yticklabels(xlabels)
         ax2.set_xticks(xticks)
@@ -251,8 +259,12 @@ class Morph_Compare(Plotter):
         ax2.set_xlim(1,7)
         ax2.set_ylim(1,7)
         ax2.set_xlabel(xlabel)
-        ax2.set_ylabel(ylabel)
-        ax2.colorbar()
+        # ax2.set_ylabel(ylabel)
+        
+        cb_ax2 = fig.add_subplot(gs[3])
+        cb2 = fig.colorbar(i22,cax=cb_ax2)
+        cb2.mappable.set_clim(0,5)
+        plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
 
 
