@@ -86,6 +86,7 @@ cols_hsc = inf_hsc.columns()
 data_hsc = inf_hsc.data()
 morph_ID_hsc = inf_hsc.IDs()
 # morph_field2 = inf2.field()
+inf_hsc.x_to_one(data_hsc)
 
 dict_out_hsc = inf_hsc.make_dict(cols_hsc,data_hsc,transpose=True)
 
@@ -112,7 +113,7 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 
 hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
 auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc)
+hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
 hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
