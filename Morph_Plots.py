@@ -115,65 +115,94 @@ class Plotter():
 
 
 
-    def bar_3bins(self,savestring,flag='None',save=True,var=None,lim=[np.nan,np.nan]):
+    def bar_3bins(self,savestring,flag='None',save=True,var=None,lim=[np.nan,np.nan],fractional='None',var_name='None'):
 
         disk1 = self.disk[var < lim[0]]
         disk_sph1 = self.disk_sph[var < lim[0]]
         sph1 = self.sph[var < lim[0]]
         irrg1 = self.irrg[var < lim[0]]
-        ps1 = self.ps1[var < lim[0]]
+        ps1 = self.ps[var < lim[0]]
 
-        disk2 = self.disk[lim[0] < var < lim[1]]
-        disk_sph2 = self.disk_sph[lim[0] < var < lim[1]]
-        sph2 = self.sph[lim[0] < var < lim[1]]
-        irrg2 = self.irrg[lim[0] < var < lim[1]]
-        ps2 = self.ps1[lim[0] < var < lim[1]]
+        disk2 = self.disk[(lim[0] < var) & (var < lim[1])]
+        disk_sph2 = self.disk_sph[(lim[0] < var) & (var < lim[1])]
+        sph2 = self.sph[(lim[0] < var) & (var < lim[1])]
+        irrg2 = self.irrg[(lim[0] < var) & (var < lim[1])]
+        ps2 = self.ps[(lim[0] < var) & (var < lim[1])]
 
         disk3 = self.disk[lim[1] < var]
         disk_sph3 = self.disk_sph[lim[1] < var]
         sph3 = self.sph[lim[1] < var]
         irrg3 = self.irrg[lim[1] < var]
-        ps3 = self.ps1[lim[1] < var]
+        ps3 = self.ps[lim[1] < var]
+
+        if fractional == 'bin':
+            factor_b1 = len(var[var < lim[0]])
+            factor_b2 = len(var[(lim[0] < var) & (var < lim[1])])
+            factor_b3 = len(var[lim[1] < var])
+
+            ylim = 0.4
+
+        elif fractional == 'total':
+            factor_b1 = len(var)
+            factor_b2 = len(var)
+            factor_b3 = len(var)
+            
+            ylim=0.3
+        
+        elif fractional == 'None':
+            factor_b1 = 1.0
+            factor_b2 = 1.0
+            factor_b3 = 1.0
+
+            ylim=200
+
 
 
         xlabels = self.main_classes[:-2]
         xticks = np.linspace(0,15,len(xlabels))
 
-        fig = plt.figure(figsize=(12,12),facecolor='w')
-        gs = fig.add_gridspec(nrows=1,ncols=3)
+        fig = plt.figure(figsize=(20,10),facecolor='w')
+        gs = fig.add_gridspec(nrows=1,ncols=3,left=0.05,right=0.95,top=0.9,bottom=0.15)
         
         ax1 = plt.subplot(gs[0])
-        ax1.set_xticks(xticks,xlabels)
-        ax1.set_xticks(rotation=25, ha='right')
-        ax1.bar(xticks[0],np.nansum(disk1),color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[1],np.nansum(disk_sph1),color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[2],np.nansum(sph1),color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[3],np.nansum(irrg1),color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[4],np.nansum(ps1),color='gray',alpha=0.75,width=1.5)
+        ax1.set_xticks(xticks,xlabels,rotation=25, ha='right')
+        ax1.bar(xticks[0],np.nansum(disk1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[1],np.nansum(disk_sph1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[2],np.nansum(sph1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[3],np.nansum(irrg1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[4],np.nansum(ps1)/factor_b1,color='gray',alpha=0.75,width=1.5)
         # ax1.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
         # ax1.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        ax1.text(0.1,0.8,f'N = {int(np.nansum(disk1)+np.nansum(disk_sph1)+np.nansum(sph1)+np.nansum(irrg1)+np.nansum(ps1))}', transform=ax1.transAxes)
+        ax1.set_title(f'{var_name} < {lim[0]}')
+        ax1.set_ylim(0,ylim)
 
-        ax2 = plt.subplot(gs[0])
-        ax2.set_xticks(xticks,xlabels)
-        ax2.set_xticks(rotation=25, ha='right')
-        ax2.bar(xticks[0],np.nansum(disk2),color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[1],np.nansum(disk_sph2),color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[2],np.nansum(sph2),color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[3],np.nansum(irrg2),color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[4],np.nansum(ps2),color='gray',alpha=0.75,width=1.5)
+        ax2 = plt.subplot(gs[1])
+        ax2.set_xticks(xticks,xlabels,rotation=25, ha='right')
+        ax2.bar(xticks[0],np.nansum(disk2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[1],np.nansum(disk_sph2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[2],np.nansum(sph2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[3],np.nansum(irrg2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[4],np.nansum(ps2)/factor_b2,color='gray',alpha=0.75,width=1.5)
         # ax2.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
         # ax2.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        ax2.text(0.1,0.8,f'N = {int(np.nansum(disk2)+np.nansum(disk_sph2)+np.nansum(sph2)+np.nansum(irrg2)+np.nansum(ps2))}', transform=ax2.transAxes)
+        ax2.set_title(f'{lim[0]} < {var_name} < {lim[1]}')
+        ax2.set_ylim(0,ylim)
 
-        ax3 = plt.subplot(gs[0])
-        ax3.set_xticks(xticks,xlabels)
-        ax3.set_xticks(rotation=25, ha='right')
-        ax3.bar(xticks[0],np.nansum(disk3),color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[1],np.nansum(disk_sph3),color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[2],np.nansum(sph3),color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[3],np.nansum(irrg3),color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[4],np.nansum(ps3),color='gray',alpha=0.75,width=1.5)
+        ax3 = plt.subplot(gs[2])
+        ax3.set_xticks(xticks,xlabels,rotation=25, ha='right')
+        ax3.bar(xticks[0],np.nansum(disk3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[1],np.nansum(disk_sph3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[2],np.nansum(sph3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[3],np.nansum(irrg3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[4],np.nansum(ps3)/factor_b3,color='gray',alpha=0.75,width=1.5)
         # ax3.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
         # ax3.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        ax3.text(0.1,0.8,f'N = {int(np.nansum(disk3)+np.nansum(disk_sph3)+np.nansum(sph3)+np.nansum(irrg3)+np.nansum(ps3))}', transform=ax3.transAxes)
+        ax3.set_title(f'{lim[1]} < {var_name}')
+        ax3.set_ylim(0,ylim)
+
 
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
