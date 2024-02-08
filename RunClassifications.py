@@ -111,10 +111,10 @@ wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
-hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
-auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
-hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
+# hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+# auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
+# hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
+# hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
 # jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
@@ -138,11 +138,11 @@ hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Cla
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
-# plot.bar('_new/total_bar_tf',flag='tf',save=True)
+plot.bar('_new/total_bar_tf',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
 # plot.bar('_new/total_bar_merg',flag='merger',save=True)
 # plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],var_name='z')
 # # plot.bar_3bins('_new/total_bar_zbin',save=False,var=sed_z,lim=[0.4,0.8],fractional='bin')
 # # plot.bar_3bins('_new/total_bar_zbin',save=False,var=sed_z,lim=[0.4,0.8],fractional='total')
 # plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$')
-# plot.bar_3bins('_new/total_bar_Lxbin_fractional',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='bin')
+plot.bar_3bins('_new/total_bar_Lxbin_fractional',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag='TF')
