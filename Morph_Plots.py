@@ -156,6 +156,30 @@ class Plotter():
 
             ylim=200
 
+        if flag == 'tf' or flag == 'TF':
+            flag_var1 = self.tf_f[var < lim[0]]
+            flag_var2 = self.tf_f[(lim[0] < var) & (var < lim[1])]
+            flag_var3 = self.tf_f[lim[1] < var]
+
+            cflag = 'r'
+            label_flag = 'Tidal Features'
+
+        elif flag == 'ps' or flag == 'PS':
+            flag_var1 = self.ps_f[var < lim[0]]
+            flag_var2 = self.ps_f[(lim[0] < var) & (var < lim[1])]
+            flag_var3 = self.ps_f[lim[1] < var]
+
+            cflag = 'b'
+            label_flag = 'Point Source'
+
+        elif flag == 'merger' or flag == 'Merger':
+            flag_var1 = self.merger_f[var < lim[0]]
+            flag_var2 = self.merger_f[(lim[0] < var) & (var < lim[1])]
+            flag_var3 = self.merger_f[lim[1] < var]
+
+            cflag = 'g'
+            label_flag = 'Major Merger'
+
 
 
         xlabels = self.main_classes[:-2]
@@ -203,6 +227,25 @@ class Plotter():
         ax3.set_title(f'{lim[1]} < {var_name}')
         ax3.set_ylim(0,ylim)
 
+        if flag != 'None':
+            ax1.bar(xticks[0],np.nansum(disk1[self.match_flags(disk1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax1.bar(xticks[1],np.nansum(disk_sph1[self.match_flags(disk_sph1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[2],np.nansum(sph1[self.match_flags(sph1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[3],np.nansum(irrg1[self.match_flags(irrg1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[4],np.nansum(ps1[self.match_flags(ps1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.legend()
+
+            ax2.bar(xticks[0],np.nansum(disk2[self.match_flags(disk2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax2.bar(xticks[1],np.nansum(disk_sph2[self.match_flags(disk_sph2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax2.bar(xticks[2],np.nansum(sph2[self.match_flags(sph2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax2.bar(xticks[3],np.nansum(irrg2[self.match_flags(irrg2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax2.bar(xticks[4],np.nansum(ps2[self.match_flags(ps2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+
+            ax3.bar(xticks[0],np.nansum(disk3[self.match_flags(disk3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax3.bar(xticks[1],np.nansum(disk_sph3[self.match_flags(disk_sph3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.bar(xticks[2],np.nansum(sph3[self.match_flags(sph3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.bar(xticks[3],np.nansum(irrg3[self.match_flags(irrg3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.bar(xticks[4],np.nansum(ps3[self.match_flags(ps3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
 
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
