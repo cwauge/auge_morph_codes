@@ -263,7 +263,7 @@ class Morph_Compare(Plotter):
         
         cb_ax2 = fig.add_subplot(gs[3])
         cb2 = fig.colorbar(i22,cax=cb_ax2)
-        cb2.mappable.set_clim(0,5)
+        cb2.mappable.set_clim(0,10)
         plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
 
