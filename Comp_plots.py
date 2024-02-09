@@ -185,7 +185,10 @@ class Morph_Compare(Plotter):
         fig = plt.figure(figsize=(9,9))
 
         ax = fig.add_subplot(111)
-        hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(0,8))
+        hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(1,8))
+        for i in range(len(yy)-1):
+            for j in range(len(xx)-1):
+                ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
         ax.set_xticklabels(xlabels)
         ax.set_yticklabels(xlabels)
         ax.set_xticks(xticks)
