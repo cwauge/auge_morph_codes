@@ -11,8 +11,9 @@ from Morph_Shape_Plots import Shape_Plotter
 from Morph_Display import Display
 from Comp_plots import Morph_Compare
 from Morph_Display import main
+from match import match
 
-with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_ALL_F6_FINAL5.fits') as hdul:
+with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_ALL_F6_FINAL8.fits') as hdul:
     sed_cols = hdul[1].columns
     sed_data = hdul[1].data 
 
@@ -39,9 +40,9 @@ check_sed = check_sed[check_sed == 'GOOD']
 sed_id = np.asarray(sed_id,dtype=float)
 
 sed_id[sed_field == 'COSMOS'] += 0.1
-sed_id[sed_field == 'S821'] += 0.2
-sed_id[sed_field == 'GOODSN'] += 0.3
-sed_id[sed_field == 'GOODSS'] += 0.4
+sed_id[sed_field == 'S82X'] += 0.2
+sed_id[sed_field == 'GOODS-N'] += 0.3
+sed_id[sed_field == 'GOODS-S'] += 0.4
 
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
 inf = Read_File('Auge_Classifications_read_total.xlsx')
@@ -52,19 +53,19 @@ data = inf.data()    # Data of file. Array of nans and Xs. No IDs or notes
 morph_ID = inf.IDs()       # ID column of file
 morph_field = inf.field()
 
-# morph_ID[morph_field == 'COSMOS'] += 0.1
-# morph_ID[morph_field == 'S821'] += 0.2
-# morph_ID[morph_field == 'GOODSN'] += 0.3
-# morph_ID[morph_field == 'GOODSS'] += 0.4
+morph_ID[morph_field == 'COSMOS'] += 0.1
+morph_ID[morph_field == 'S821'] += 0.2
+morph_ID[morph_field == 'GOODSN'] += 0.3
+morph_ID[morph_field == 'GOODSS'] += 0.4
 
 inf.x_to_one(data)   # Turn the Xs in the data array to 1s
 
 # Make a dictionary with Keys as classification and values as arrays for classification of each source
 dict_out = inf.make_dict(cols,data,transpose=True)
 
-print('check: ID', morph_ID[0:20])
-print('check: Disk', dict_out['Disk'][0:20])
-print('check: blank', dict_out['Blank'][0:20])
+# print('check: ID', morph_ID[0:20])
+# print('check: Disk', dict_out['Disk'][0:20])
+# print('check: blank', dict_out['Blank'][0:20])
 
 print('Disk:          ',len(dict_out['Disk']),np.nansum(dict_out['Disk']))
 print('Disk-Spheroid: ',len(dict_out['Disk-Spheroid']),np.nansum(dict_out['Disk-Spheroid']))
@@ -123,9 +124,9 @@ plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
 
-hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
-auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
+# hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+# auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
+# hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
 # hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
@@ -146,7 +147,7 @@ hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
-# plot_shape.shape_class_bar('_new/total_bar_shape_frac',flag='tf',bins='shape',fractional='bin',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_frac',flag='tf',bins='shape',fractional='bin',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 

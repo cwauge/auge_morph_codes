@@ -31,6 +31,8 @@ class Shape_Plotter(Plotter):
         self.main_classes = np.asarray([i for i in classes if 'flag' not in i])
         self.flag_classes = np.asarray([i for i in classes if 'flag' in i])
 
+        print(len(self.morph_id),len(self.shape_id))
+
         self.ix_morph, self.iy_shape = match(self.morph_id,self.shape_id)
 
         self.disk = self.dict['Disk']
@@ -87,6 +89,8 @@ class Shape_Plotter(Plotter):
 
         else:
             print('Invalid bins optionl. Options are:   shape')
+
+        print(len(self.shape_match),len(disk_match), len(self.disk))
 
         # Separate each classification by the 5 bins defined earlier in the function. 
         disk_b1,     disk_b2,     disk_b3,     disk_b4,    disk_b5     = disk_match[b1],     disk_match[b2],     disk_match[b3],     disk_match[b4],     disk_match[b5]
