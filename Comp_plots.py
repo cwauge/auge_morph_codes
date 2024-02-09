@@ -185,7 +185,7 @@ class Morph_Compare(Plotter):
         fig = plt.figure(figsize=(9,9))
 
         ax = fig.add_subplot(111)
-        plt.hist2d(x,y,bins=np.arange(0,8))
+        hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(0,8))
         ax.set_xticklabels(xlabels)
         ax.set_yticklabels(xlabels)
         ax.set_xticks(xticks)
@@ -198,6 +198,9 @@ class Morph_Compare(Plotter):
         plt.colorbar()
         plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
+
+        print(np.shape(hh))
+        print(hh)
 
 
     def hist_comp_2D_split(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None,cond_lim=None):

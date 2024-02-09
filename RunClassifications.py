@@ -52,10 +52,10 @@ data = inf.data()    # Data of file. Array of nans and Xs. No IDs or notes
 morph_ID = inf.IDs()       # ID column of file
 morph_field = inf.field()
 
-morph_ID[morph_field == 'COSMOS'] += 0.1
-morph_ID[morph_field == 'S821'] += 0.2
-morph_ID[morph_field == 'GOODSN'] += 0.3
-morph_ID[morph_field == 'GOODSS'] += 0.4
+# morph_ID[morph_field == 'COSMOS'] += 0.1
+# morph_ID[morph_field == 'S821'] += 0.2
+# morph_ID[morph_field == 'GOODSN'] += 0.3
+# morph_ID[morph_field == 'GOODSS'] += 0.4
 
 inf.x_to_one(data)   # Turn the Xs in the data array to 1s
 
@@ -123,9 +123,9 @@ plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
 
-# hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
-# auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-# hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
+hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
+hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
 # hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
@@ -142,7 +142,7 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
-plot_shape.shape_class_bar('_new/total_bar_shape_mg2',flag='merger',bins='shape',save=True)
+# plot_shape.shape_class_bar('_new/total_bar_shape_mg2',flag='merger',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
@@ -150,11 +150,11 @@ plot_shape.shape_class_bar('_new/total_bar_shape_mg2',flag='merger',bins='shape'
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
-plot.bar('_new/total_bar_tf',flag='tf',save=True)
+# plot.bar('_new/total_bar_tf',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
 # plot.bar('_new/total_bar_merg',flag='merger',save=True)
 # plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],var_name='z')
 # # plot.bar_3bins('_new/total_bar_zbin',save=False,var=sed_z,lim=[0.4,0.8],fractional='bin')
-plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],fractional='None',flag='TF',var_name=r'z')
+# plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],fractional='None',flag='TF',var_name=r'z')
 # plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$')
-plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag='TF')
+# plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag='TF')
