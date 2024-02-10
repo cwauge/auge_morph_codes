@@ -77,12 +77,14 @@ class Plotter():
         ax.bar(xticks[4],np.nansum(self.ps),color='gray',alpha=0.75,width=1.5)
         # ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
         # ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        ax.text(0.1,0.8,f'N = {len(self.disk)}', transform=ax.transAxes)
+        ax.text(0.1,0.7,f'N = {int(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps))}', transform=ax.transAxes)
 
         if flag == 'tf' or flag == 'TF':
             ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
             ax.bar(xticks[1],np.nansum(self.disk_sph[self.match_flags(self.disk_sph,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[2],np.nansum(self.sph[self.match_flags(self.sph,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax.bar(xticks[3],np.nansum(self.irrg[self.match_flags(self.irrg,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+            ax.bar(xticks[3],np.nansum(self.irrg),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             ax.bar(xticks[4],np.nansum(self.ps[self.match_flags(self.ps,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             # ax.bar(xticks[5],np.nansum(self.unc[self.match_flags(self.unc,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
             # ax.bar(xticks[6],np.nansum(self.blank[self.match_flags(self.blank,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
@@ -180,6 +182,15 @@ class Plotter():
             cflag = 'g'
             label_flag = 'Major Merger'
 
+        if flag == 'tf' or 'TF':
+            flag_frac1 = ((np.nansum(disk1[self.match_flags(disk1,flag_var1,output='loc')])+np.nansum(disk_sph1[self.match_flags(disk_sph1,flag_var1,output='loc')])+np.nansum(sph1[self.match_flags(sph1,flag_var1,output='loc')])+np.nansum(irrg1)+np.nansum(ps1[self.match_flags(ps1,flag_var1,output='loc')])))/(np.nansum(disk1)+np.nansum(disk_sph1)+np.nansum(sph1)+np.nansum(irrg1)+np.nansum(ps1))*100
+            flag_frac2 = ((np.nansum(disk2[self.match_flags(disk2,flag_var2,output='loc')])+np.nansum(disk_sph2[self.match_flags(disk_sph2,flag_var2,output='loc')])+np.nansum(sph2[self.match_flags(sph2,flag_var2,output='loc')])+np.nansum(irrg2)+np.nansum(ps2[self.match_flags(ps2,flag_var2,output='loc')])))/(np.nansum(disk2)+np.nansum(disk_sph2)+np.nansum(sph2)+np.nansum(irrg2)+np.nansum(ps2))*100
+            flag_frac3 = ((np.nansum(disk3[self.match_flags(disk3,flag_var3,output='loc')])+np.nansum(disk_sph3[self.match_flags(disk_sph3,flag_var3,output='loc')])+np.nansum(sph3[self.match_flags(sph3,flag_var3,output='loc')])+np.nansum(irrg3)+np.nansum(ps3[self.match_flags(ps3,flag_var3,output='loc')])))/(np.nansum(disk3)+np.nansum(disk_sph3)+np.nansum(sph3)+np.nansum(irrg3)+np.nansum(ps3))*100
+
+        else:
+            flag_frac1 = ((np.nansum(disk1[self.match_flags(disk1,flag_var1,output='loc')])+np.nansum(disk_sph1[self.match_flags(disk_sph1,flag_var1,output='loc')])+np.nansum(sph1[self.match_flags(sph1,flag_var1,output='loc')])+np.nansum(irrg1[self.match_flags(irrg1,flag_var1,output='loc')])+np.nansum(ps1[self.match_flags(ps1,flag_var1,output='loc')])))/(np.nansum(disk1)+np.nansum(disk_sph1)+np.nansum(sph1)+np.nansum(irrg1)+np.nansum(ps1))*100
+            flag_frac2 = ((np.nansum(disk2[self.match_flags(disk2,flag_var2,output='loc')])+np.nansum(disk_sph2[self.match_flags(disk_sph2,flag_var2,output='loc')])+np.nansum(sph2[self.match_flags(sph2,flag_var2,output='loc')])+np.nansum(irrg2[self.match_flags(irrg1,flag_var1,output='loc')])+np.nansum(ps2[self.match_flags(ps2,flag_var2,output='loc')])))/(np.nansum(disk2)+np.nansum(disk_sph2)+np.nansum(sph2)+np.nansum(irrg2)+np.nansum(ps2))*100
+            flag_frac3 = ((np.nansum(disk3[self.match_flags(disk3,flag_var3,output='loc')])+np.nansum(disk_sph3[self.match_flags(disk_sph3,flag_var3,output='loc')])+np.nansum(sph3[self.match_flags(sph3,flag_var3,output='loc')])+np.nansum(irrg3[self.match_flags(irrg1,flag_var1,output='loc')])+np.nansum(ps3[self.match_flags(ps3,flag_var3,output='loc')])))/(np.nansum(disk3)+np.nansum(disk_sph3)+np.nansum(sph3)+np.nansum(irrg3)+np.nansum(ps3))*100
 
 
         xlabels = self.main_classes[:-2]
@@ -200,6 +211,7 @@ class Plotter():
         ax1.text(0.1,0.8,f'N = {int(np.nansum(disk1)+np.nansum(disk_sph1)+np.nansum(sph1)+np.nansum(irrg1)+np.nansum(ps1))}', transform=ax1.transAxes)
         ax1.set_title(f'{var_name} < {lim[0]}')
         ax1.set_ylim(0,ylim)
+        ax1.text(0.05, 0.7, f'n/N = {np.round(flag_frac1)}%', transform=ax1.transAxes,color=cflag)
 
         ax2 = plt.subplot(gs[1])
         ax2.set_xticks(xticks,xlabels,rotation=25, ha='right')
@@ -213,6 +225,7 @@ class Plotter():
         ax2.text(0.1,0.8,f'N = {int(np.nansum(disk2)+np.nansum(disk_sph2)+np.nansum(sph2)+np.nansum(irrg2)+np.nansum(ps2))}', transform=ax2.transAxes)
         ax2.set_title(f'{lim[0]} < {var_name} < {lim[1]}')
         ax2.set_ylim(0,ylim)
+        ax2.text(0.05, 0.7, f'n/N = {np.round(flag_frac2)}%', transform=ax2.transAxes,color=cflag)
 
         ax3 = plt.subplot(gs[2])
         ax3.set_xticks(xticks,xlabels,rotation=25, ha='right')
@@ -226,12 +239,14 @@ class Plotter():
         ax3.text(0.1,0.8,f'N = {int(np.nansum(disk3)+np.nansum(disk_sph3)+np.nansum(sph3)+np.nansum(irrg3)+np.nansum(ps3))}', transform=ax3.transAxes)
         ax3.set_title(f'{lim[1]} < {var_name}')
         ax3.set_ylim(0,ylim)
+        ax3.text(0.05, 0.7, f'n/N = {np.round(flag_frac3)}%', transform=ax3.transAxes,color=cflag)
+
 
         if flag != 'None':
             ax1.bar(xticks[0],np.nansum(disk1[self.match_flags(disk1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
             ax1.bar(xticks[1],np.nansum(disk_sph1[self.match_flags(disk_sph1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
             ax1.bar(xticks[2],np.nansum(sph1[self.match_flags(sph1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[3],np.nansum(irrg1[self.match_flags(irrg1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[3],np.nansum(irrg1)/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
             ax1.bar(xticks[4],np.nansum(ps1[self.match_flags(ps1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
             ax1.legend()
 
