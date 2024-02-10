@@ -147,7 +147,7 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
-plot_shape.shape_class_bar('_new/total_bar_shape_frac',flag='tf',bins='shape',fractional='bin',save=True)
+# plot_shape.shape_class_bar('_new/total_bar_shape_frac2',flag='tf',bins='shape',fractional='bin',save=True)
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
