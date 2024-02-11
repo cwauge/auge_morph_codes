@@ -151,11 +151,13 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
 
 
-# plot.bar('_new/total_bar_tf',flag='tf',save=True)
+plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.2,0.4,0.5,0.0,0.8])
+
+# plot.bar('_new/total_bar_tf_s82x',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
 # plot.bar('_new/total_bar_merg',flag='merger',save=True)
-# plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],var_name='z')
+# plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],var_name='z',flag='tf')
 # # plot.bar_3bins('_new/total_bar_zbin',save=False,var=sed_z,lim=[0.4,0.8],fractional='bin')
 # plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],fractional='None',flag='TF',var_name=r'z')
-# plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$')
+# plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',flag='tf')
 # plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag='TF')
