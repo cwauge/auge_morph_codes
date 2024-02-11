@@ -7,6 +7,7 @@ Input data will be read in from read_vis_class.py
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+import pickle
 
 def main(classes,input_dict):
     plot = Plotter(classes,input_dict)
@@ -292,6 +293,21 @@ class Plotter():
 
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
+        plt.show()
+
+
+    def hist(self,savestring,x,bins=[0,1,0.1],xlim=[0,1],ylim=10,xlabel='',save=False):
+
+        fig = plt.figure(figsize=(8,8))
+        ax = plt.subplot(111)
+
+        plt.hist(x,bins=np.arange(bins[0],bins[1],bins[2]),color='gray')
+        plt.xlabel(xlabel)
+        plt.xlim(xlim[0],xlim[1])
+        plt.ylabel(0,ylim)
+        
+        if save:
+            plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/galight_figs/{savestring}.pdf')
         plt.show()
 
 
