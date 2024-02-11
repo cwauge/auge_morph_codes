@@ -62,7 +62,7 @@ class Plotter():
             return loc
 
 
-    def bar(self,savestring,flag='None',save=True):
+    def bar(self,savestring,flag='None',save=True,error=False,err_subset=None,error_array=None,err_subset_var=None):
         xlabels = self.main_classes[:-2]
         xticks = np.linspace(0,15,len(xlabels))
 
@@ -70,15 +70,43 @@ class Plotter():
         ax = plt.subplot(111)
         ax.set_xticks(xticks,xlabels)
         plt.xticks(rotation=25, ha='right')
-        ax.bar(xticks[0],np.nansum(self.disk),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[2],np.nansum(self.sph),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[3],np.nansum(self.irrg),color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[4],np.nansum(self.ps),color='gray',alpha=0.75,width=1.5)
-        # ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
-        # ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+
+        if error:
+            err_scale = np.asarray(error_array)/2 # divide by 2 to lower the top of the bar to the middle of the uncertain region, error bar will then spread above and below this level. 
+            if err_subset is None:
+                subset = np.full(np.shape(self.disk), True)
+            else:
+                subset = err_subset == err_subset_var
+        else:
+            err_scale = np.ones(5) # Number of classifications being plotted
+
+
+        ax.bar(xticks[0],np.nansum(self.disk[subset]) - np.nansum(self.disk[subset])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[1],np.nansum(self.disk_sph[subset]) - np.nansum(self.disk_sph[subset])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[2],np.nansum(self.sph[subset]) - np.nansum(self.sph[subset])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax.errorbar(xticks[0],np.nansum(self.disk[subset]) - np.nansum(self.disk[subset])*err_scale[0],yerr=np.nansum(self.disk[subset])*err_scale[0],fmt='o',color='k')
+        ax.errorbar(xticks[1],np.nansum(self.disk_sph[subset]) - np.nansum(self.disk_sph[subset])*err_scale[1],yerr=np.nansum(self.disk_sph[subset])*err_scale[1],fmt='o',color='k')
+        ax.errorbar(xticks[2],np.nansum(self.sph[subset]) - np.nansum(self.sph[subset])*err_scale[2],yerr=np.nansum(self.sph[subset])*err_scale[2],fmt='o',color='k')
+        ax.errorbar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        ax.errorbar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
         ax.text(0.1,0.8,f'N = {len(self.disk)}', transform=ax.transAxes)
         ax.text(0.1,0.7,f'N = {int(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps))}', transform=ax.transAxes)
+
+
+        # else:
+        #     ax.bar(xticks[0],np.nansum(self.disk),color='gray',alpha=0.75,width=1.5)
+        #     ax.bar(xticks[1],np.nansum(self.disk_sph),color='gray',alpha=0.75,width=1.5)
+        #     ax.bar(xticks[2],np.nansum(self.sph),color='gray',alpha=0.75,width=1.5)
+        #     ax.bar(xticks[3],np.nansum(self.irrg),color='gray',alpha=0.75,width=1.5)
+        #     ax.bar(xticks[4],np.nansum(self.ps),color='gray',alpha=0.75,width=1.5)
+        #     # ax.bar(xticks[5],np.nansum(self.unc),color='gray',alpha=0.75,width=1.5)
+        #     # ax.bar(xticks[6],np.nansum(self.blank),color='gray',alpha=0.75,width=1.5)
+        #     ax.text(0.1,0.8,f'N = {len(self.disk)}', transform=ax.transAxes)
+        #     ax.text(0.1,0.7,f'N = {int(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps))}', transform=ax.transAxes)
 
         if flag == 'tf' or flag == 'TF':
             ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,self.tf_f,output='loc')]),color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
