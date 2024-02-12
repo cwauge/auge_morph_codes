@@ -12,16 +12,16 @@ class Read_Pickle():
         self.fname = fname
 
         if path == 'None':
-            self.path = '/Users/connor_auge/Research/Disertation/galight/galight/COSMOS_pickle_output/'
+            self.path = '/Users/connor_auge/Research/Disertation/morphology/galight/galight/COSMOS_pickle_output/'
         else:
             self.path = path
 
     
     def read(self):
-        self.results = pickle.load(open(f'{self.path}{self.fname}.pkl'))
+        self.results = pickle.load(open(f'{self.path}{self.fname}','rb'))
 
     def sersic(self,component=0):
-        n = self.results[component]['n_sersic']
+        n = self.results.final_result_galaxy[component]['n_sersic']
         return n
     
     def BtoT(self):
