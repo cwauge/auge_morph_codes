@@ -304,7 +304,7 @@ class Plotter():
         plt.hist(x,bins=np.arange(bins[0],bins[1],bins[2]),color='gray')
         plt.xlabel(xlabel)
         plt.xlim(xlim[0],xlim[1])
-        plt.ylabel(0,ylim)
+        plt.ylim(0,ylim)
         
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/galight_figs/{savestring}.pdf')
