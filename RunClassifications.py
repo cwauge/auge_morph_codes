@@ -123,11 +123,10 @@ wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
-
 # hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
 # auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-# hsc_plot_comp.hist_comp_2D('hsc_comp',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
-# hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
+# hsc_plot_comp.hist_comp_2D('hsc_comp2',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
+# hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin2',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
 # jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
@@ -148,10 +147,14 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac2',flag='tf',bins='shape',fractional='bin',save=True)
-# plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot',flag='tf',bins='shape',fractional='total',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot_err',flag='tf',bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
 
-plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.2,0.4,0.5,0.0,0.8])
+# plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.38,0.62,0.47,0.0,0.0])
+# plot.bar('_new/total_bar_tf_s82xerr2',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.47,0.47,0.72,0.0,0.0])
+plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+
+plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
 # plot.bar('_new/total_bar_tf_s82x',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)

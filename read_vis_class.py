@@ -94,6 +94,10 @@ class Read_File():
             dict_out[keys[i]] = dict_data[i]
 
         return dict_out
+    
+    # def classification(self,dict,ID,key):
+    #     dict[key][dict] == 
+
 
 
 
