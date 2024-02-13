@@ -61,6 +61,78 @@ class Plotter():
                 return
         elif output == 'loc':
             return loc
+        
+
+    def Full_classification(self):
+        # I think I need a 1 d array for each classifier, where every index is a differnt source
+        # and every value in the index is a string or number that corresponds to the classification. 
+        # I currently have individual arrays for each classification now (from Plotter class)
+        # and a dictionary of these same arrays for my new input class
+        # Take each array and add a value to it to change each classification to it's own number
+        # Then collapse or concatinate the arrays together for a single, 1-D array. 
+          
+        # For this to work I need a different function that will change the keys of the in_dict 
+        # to match my classification scheme
+        # in_disk = self.in_dict['Disk']
+        # in_disk_sph = self.in_dict['Disk-Spheroid']+1
+        # in_sph = self.in_dict['Spheroid']+2
+        # in_irrg = self.in_dict['Irregular']+3
+        # in_ps = self.in_dict['PS']+4
+        # in_unc = self.in_dict['Unclassifiable']+5
+        # in_blank = self.in_dict['Blank']+5
+        # in_merger_f = self.in_dict['Merger_flag']+7
+        # in_tf_f = self.in_dict['TF_flag']+8
+        # in_ps_f = self.in_dict['PS_flag']+9
+        self.disk_sph += 1
+        self.sph += 2
+        self.irrg += 3
+        self.ps += 4
+        self.unc += 5
+        self.blank += 5
+        self.merger_f += 7
+        self.tf_f += 8
+        self.ps_f += 9
+        # for i in range(len(self.disk)):
+            # print(self.disk[i],self.disk_sph[i],self.sph[i],self.irrg[i],self.ps[i],self.unc[i])
+
+        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc,self.blank],dtype=float)
+        auge_numb_array[np.isnan(auge_numb_array)] = 0
+        auge_numb_1d = np.sum(auge_numb_array,axis=0)
+
+        print('auge array')
+        print(auge_numb_array)
+        print(auge_numb_1d)
+        print(np.shape(auge_numb_1d))
+        print(auge_numb_1d[0])
+
+        # auge_numb_1d = np.concatenate(auge_numb_array)
+        # in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
+        # in_numb_array[np.isnan(in_numb_array)] = 0
+        # in_numb_1d = np.sum(in_numb_array,axis=0)
+        # # in_numb_1d = np.concatenate(in_numb_array)
+
+
+        class_out = []
+        for i in auge_numb_1d:
+            if i == 1:
+                class_out.append('Disk')
+            if i == 2:
+                class_out.append('Disk_sph')
+            if i == 3:
+                class_out.append('Sph')
+            if i == 4:
+                class_out.append('Irrg')
+            if i == 5:
+                class_out.append('PS')
+            if i == 6:
+                class_out.append('Unc')
+            if i == 7:
+                class_out.append('None')
+
+        return np.asarray(class_out)
+
+
+    # def class_error(self,true_dict,comp_dict):
 
 
     def bar(self,savestring,flag='None',save=True,error=False,err_subset=None,error_array=None,err_subset_var=None):
@@ -79,23 +151,37 @@ class Plotter():
             else:
                 subset = err_subset == err_subset_var
         else:
-            err_scale = np.ones(5) # Number of classifications being plotted
+            err_scale = np.zeros(5) # Number of classifications being plotted
+            subset = np.full(np.shape(self.disk), True) 
 
 
-        ax.bar(xticks[0],np.nansum(self.disk[subset]) - np.nansum(self.disk[subset])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[1],np.nansum(self.disk_sph[subset]) - np.nansum(self.disk_sph[subset])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[2],np.nansum(self.sph[subset]) - np.nansum(self.sph[subset])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax.bar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[0],np.nansum(self.disk) + np.nansum(self.sph[subset])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[1],np.nansum(self.disk_sph) + np.nansum(self.sph[subset])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[2],np.nansum(self.sph) - np.nansum(self.sph[subset])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[3],np.nansum(self.irrg) - np.nansum(self.irrg[subset])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax.bar(xticks[4],np.nansum(self.ps) - np.nansum(self.ps[subset])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
-        ax.errorbar(xticks[0],np.nansum(self.disk[subset]) - np.nansum(self.disk[subset])*err_scale[0],yerr=np.nansum(self.disk[subset])*err_scale[0],fmt='o',color='k')
-        ax.errorbar(xticks[1],np.nansum(self.disk_sph[subset]) - np.nansum(self.disk_sph[subset])*err_scale[1],yerr=np.nansum(self.disk_sph[subset])*err_scale[1],fmt='o',color='k')
-        ax.errorbar(xticks[2],np.nansum(self.sph[subset]) - np.nansum(self.sph[subset])*err_scale[2],yerr=np.nansum(self.sph[subset])*err_scale[2],fmt='o',color='k')
-        ax.errorbar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        ax.errorbar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        ax.errorbar(xticks[0],np.nansum(self.disk) + np.nansum(self.sph[subset])*err_scale[0],yerr=np.nansum(self.sph[subset])*err_scale[0],fmt='o',color='k')
+        ax.errorbar(xticks[1],np.nansum(self.disk_sph) + np.nansum(self.sph[subset])*err_scale[1],yerr=np.nansum(self.sph[subset])*err_scale[1],fmt='o',color='k')
+        ax.errorbar(xticks[2],np.nansum(self.sph) - np.nansum(self.sph[subset])*err_scale[2],yerr=np.nansum(self.sph[subset])*err_scale[2],fmt='o',color='k')
+        ax.errorbar(xticks[3],np.nansum(self.irrg) - np.nansum(self.irrg[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        ax.errorbar(xticks[4],np.nansum(self.ps) - np.nansum(self.ps[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
         
+        # ax.bar(xticks[0],np.nansum(self.disk[subset]) + 13/2,color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[1],np.nansum(self.disk_sph[subset]) + 11/2,color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[2],np.nansum(self.sph[subset]) - 24/2,color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax.bar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        # ax.errorbar(xticks[0],np.nansum(self.disk[subset]) + 13/2,yerr=np.nansum(self.sph[subset])*err_scale[0],fmt='o',color='k')
+        # ax.errorbar(xticks[1],np.nansum(self.disk_sph[subset]) +11/2,yerr=np.nansum(self.sph[subset])*err_scale[1],fmt='o',color='k')
+        # ax.errorbar(xticks[2],np.nansum(self.sph[subset]) - 24,yerr=np.nansum(self.sph[subset])*err_scale[2],fmt='o',color='k')
+        # ax.errorbar(xticks[3],np.nansum(self.irrg[subset]) - np.nansum(self.irrg[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax.errorbar(xticks[4],np.nansum(self.ps[subset]) - np.nansum(self.ps[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
         ax.text(0.1,0.8,f'N = {len(self.disk)}', transform=ax.transAxes)
-        ax.text(0.1,0.7,f'N = {int(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps))}', transform=ax.transAxes)
+        # ax.text(0.1,0.7,f'N = {int(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps))}', transform=ax.transAxes)
 
 
         # else:
@@ -143,7 +229,6 @@ class Plotter():
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
         plt.show()
-
 
 
     def bar_3bins(self,savestring,flag='None',save=True,var=None,lim=[np.nan,np.nan],fractional='None',var_name='None'):
@@ -296,7 +381,7 @@ class Plotter():
         plt.show()
 
 
-    def hist(self,savestring,x,bins=[0,1,0.1],xlim=[0,1],ylim=10,xlabel='',save=False):
+    def hist(self,savestring,x,bins=[0,1,0.1],xlim=[0,1],ylim=10,xlabel='',save=False,title=' '):
 
         fig = plt.figure(figsize=(8,8))
         ax = plt.subplot(111)
@@ -304,7 +389,8 @@ class Plotter():
         plt.hist(x,bins=np.arange(bins[0],bins[1],bins[2]),color='gray')
         plt.xlabel(xlabel)
         plt.xlim(xlim[0],xlim[1])
-        plt.ylim(0,ylim)
+        # plt.ylim(0,ylim)
+        plt.title(title)
         
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/galight_figs/{savestring}.pdf')

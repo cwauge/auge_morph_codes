@@ -154,6 +154,9 @@ class Morph_Compare(Plotter):
 
         print('auge array')
         print(auge_numb_array)
+        print(auge_numb_1d)
+        print(np.shape(auge_numb_1d))
+        print(auge_numb_1d[0])
 
         # auge_numb_1d = np.concatenate(auge_numb_array)
         in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
