@@ -63,7 +63,7 @@ class Shape_Plotter(Plotter):
 
         return out_array
 
-    def shape_class_bar(self,savestring,flag='None',bins='shape',fractional='None',save=True):
+    def shape_class_bar(self,savestring,flag='None',bins='shape',fractional='None',save=True,error=False,err_subset=None,error_array=None,err_subset_var=None):
 
         # Match the morphology classification arrays to the shape IDs from the match class
         disk_match     = self.match_class(self.disk)
@@ -76,6 +76,18 @@ class Shape_Plotter(Plotter):
         tf_f_match     = self.match_class(self.tf_f)
         merg_f_match   = self.match_class(self.merger_f)
         ps_f_match     = self.match_class(self.ps_f)
+
+        if error:
+            err_scale = np.asarray(error_array)/2 # divide by 2 to lower the top of the bar to the middle of the uncertain region, error bar will then spread above and below this level. 
+            if err_subset is None:
+                subset = np.full(np.shape(self.disk), True)
+            else:
+                subset = err_subset == err_subset_var
+        else:
+            err_scale = np.zeros(5) # Number of classifications being plotted
+            subset = np.full(np.shape(self.disk), True) 
+
+        print(len(subset))
 
 
         if bins == 'shape':
@@ -99,7 +111,8 @@ class Shape_Plotter(Plotter):
         tf_f_b1,     tf_f_b2,     tf_f_b3,     tf_f_b4,     tf_f_b5     = tf_f_match[b1],     tf_f_match[b2],     tf_f_match[b3],     tf_f_match[b4],     disk_match[b5]
         merg_f_b1,   merg_f_b2,   merg_f_b3,   merg_f_b4,   merg_f_b5   = merg_f_match[b1],   merg_f_match[b2],   merg_f_match[b3],   merg_f_match[b4],   merg_f_match[b5]
         ps_f_b1,     ps_f_b2,     ps_f_b3,     ps_f_b4,     ps_f_b5     = ps_f_match[b1],     ps_f_match[b2],     ps_f_match[b3],     ps_f_match[b4],     ps_f_match[b5]
-
+        subset_b1, subset_b2, subset_b3, subset_b4, subset_b5 = subset[b1], subset[b2], subset[b3], subset[b4], subset[b5]
+        print(len(subset_b1))
 
         if fractional == 'bin':
             factor_b1 = len(self.shape_match[b1])
@@ -156,13 +169,29 @@ class Shape_Plotter(Plotter):
         ax1.grid()
 
         # plot subplot data 
-        ax1.bar(xticks[0],np.nansum(disk_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[1],np.nansum(disk_sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[2],np.nansum(sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[3],np.nansum(irrg_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[6],np.nansum(blank_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[0],np.nansum(disk_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[1],np.nansum(disk_sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[2],np.nansum(sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[3],np.nansum(irrg_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # # ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # # ax1.bar(xticks[6],np.nansum(blank_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+
+        print(len(sph_b1))
+
+        ax1.bar(xticks[0],np.nansum(disk_b1) + np.nansum(sph_b1[subset_b1])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[1],np.nansum(disk_sph_b1) + np.nansum(sph_b1[subset_b1])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[2],np.nansum(sph_b1) - np.nansum(sph_b1[subset_b1])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset_b1])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset_b1])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax1.errorbar(xticks[0],np.nansum(disk_b1) + np.nansum(sph_b1[subset_b1])*err_scale[0],yerr=np.nansum(sph_b1[subset_b1])*err_scale[0],fmt='o',color='k')
+        ax1.errorbar(xticks[1],np.nansum(disk_sph_b1) + np.nansum(sph_b1[subset_b1])*err_scale[1],yerr=np.nansum(sph_b1[subset_b1])*err_scale[1],fmt='o',color='k')
+        ax1.errorbar(xticks[2],np.nansum(sph_b1) - np.nansum(sph_b1[subset_b1])*err_scale[2],yerr=np.nansum(sph_b1[subset_b1])*err_scale[2],fmt='o',color='k')
+        # ax1.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax1.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
 
         if flag == 'tf' or flag == 'TF':
             ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -203,13 +232,28 @@ class Shape_Plotter(Plotter):
         ax2.grid()
 
         # plot subplot data
-        ax2.bar(xticks[0],np.nansum(disk_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[1],np.nansum(disk_sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[2],np.nansum(sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[3],np.nansum(irrg_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[0],np.nansum(disk_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[1],np.nansum(disk_sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[2],np.nansum(sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[3],np.nansum(irrg_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # # ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # # ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+
+        ax2.bar(xticks[0],np.nansum(disk_b2) + np.nansum(sph_b2[subset_b2])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[1],np.nansum(disk_sph_b2) + np.nansum(sph_b2[subset_b2])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[2],np.nansum(sph_b2) - np.nansum(sph_b2[subset_b2])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[3],np.nansum(irrg_b2) - np.nansum(irrg_b2[subset_b2])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[4],np.nansum(ps_b2) - np.nansum(ps_b2[subset_b2])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax2.errorbar(xticks[0],np.nansum(disk_b2) + np.nansum(sph_b2[subset_b2])*err_scale[0],yerr=np.nansum(sph_b2[subset_b2])*err_scale[0],fmt='o',color='k')
+        ax2.errorbar(xticks[1],np.nansum(disk_sph_b2) + np.nansum(sph_b2[subset_b2])*err_scale[1],yerr=np.nansum(sph_b2[subset_b2])*err_scale[1],fmt='o',color='k')
+        ax2.errorbar(xticks[2],np.nansum(sph_b2) - np.nansum(sph_b2[subset_b2])*err_scale[2],yerr=np.nansum(sph_b2[subset_b2])*err_scale[2],fmt='o',color='k')
+        # ax2.errorbar(xticks[3],np.nansum(irrg_b2) - np.nansum(irrg_b2[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax2.errorbar(xticks[4],np.nansum(ps_b2) - np.nansum(ps_b2[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
+
 
         if flag == 'tf' or flag == 'TF':
             ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -253,13 +297,28 @@ class Shape_Plotter(Plotter):
         ax3.grid()
 
         # plot subplot data
-        ax3.bar(xticks[0],np.nansum(disk_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[1],np.nansum(disk_sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[2],np.nansum(sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[3],np.nansum(irrg_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[0],np.nansum(disk_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[1],np.nansum(disk_sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[2],np.nansum(sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[3],np.nansum(irrg_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # # ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # # ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+
+        ax3.bar(xticks[0],np.nansum(disk_b3) + np.nansum(sph_b3[subset_b3])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[1],np.nansum(disk_sph_b3) + np.nansum(sph_b3[subset_b3])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[2],np.nansum(sph_b3) - np.nansum(sph_b3[subset_b3])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[3],np.nansum(irrg_b3) - np.nansum(irrg_b3[subset_b3])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[4],np.nansum(ps_b3) - np.nansum(ps_b3[subset_b3])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax3.errorbar(xticks[0],np.nansum(disk_b3) + np.nansum(sph_b3[subset_b3])*err_scale[0],yerr=np.nansum(sph_b3[subset_b3])*err_scale[0],fmt='o',color='k')
+        ax3.errorbar(xticks[1],np.nansum(disk_sph_b3) + np.nansum(sph_b3[subset_b3])*err_scale[1],yerr=np.nansum(sph_b3[subset_b3])*err_scale[1],fmt='o',color='k')
+        ax3.errorbar(xticks[2],np.nansum(sph_b3) - np.nansum(sph_b3[subset_b3])*err_scale[2],yerr=np.nansum(sph_b3[subset_b3])*err_scale[2],fmt='o',color='k')
+        # ax3.errorbar(xticks[3],np.nansum(irrg_b3) - np.nansum(irrg_b3[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax3.errorbar(xticks[4],np.nansum(ps_b3) - np.nansum(ps_b3[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
+
 
         if flag == 'tf' or flag == 'TF':
             ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -300,13 +359,28 @@ class Shape_Plotter(Plotter):
         ax4.grid()
 
         # plot subplot data
-        ax4.bar(xticks[0],np.nansum(disk_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[1],np.nansum(disk_sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[2],np.nansum(sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[3],np.nansum(irrg_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[0],np.nansum(disk_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[1],np.nansum(disk_sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[2],np.nansum(sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[3],np.nansum(irrg_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # # ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # # ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+
+        ax4.bar(xticks[0],np.nansum(disk_b4) + np.nansum(sph_b4[subset_b4])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[1],np.nansum(disk_sph_b4) + np.nansum(sph_b4[subset_b4])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[2],np.nansum(sph_b4) - np.nansum(sph_b4[subset_b4])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[3],np.nansum(irrg_b4) - np.nansum(irrg_b4[subset_b4])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[4],np.nansum(ps_b4) - np.nansum(ps_b4[subset_b4])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax4.errorbar(xticks[0],np.nansum(disk_b4) + np.nansum(sph_b4[subset_b4])*err_scale[0],yerr=np.nansum(sph_b4[subset_b4])*err_scale[0],fmt='o',color='k')
+        ax4.errorbar(xticks[1],np.nansum(disk_sph_b4) + np.nansum(sph_b4[subset_b4])*err_scale[1],yerr=np.nansum(sph_b4[subset_b4])*err_scale[1],fmt='o',color='k')
+        ax4.errorbar(xticks[2],np.nansum(sph_b4) - np.nansum(sph_b4[subset_b4])*err_scale[2],yerr=np.nansum(sph_b4[subset_b4])*err_scale[2],fmt='o',color='k')
+        # ax4.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax4.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
+
 
         if flag == 'tf' or flag == 'TF':
             ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
@@ -348,13 +422,28 @@ class Shape_Plotter(Plotter):
         ax5.grid()
 
         # plot subplot data
-        ax5.bar(xticks[0],np.nansum(disk_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[1],np.nansum(disk_sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[2],np.nansum(sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[3],np.nansum(irrg_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[0],np.nansum(disk_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[1],np.nansum(disk_sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[2],np.nansum(sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[3],np.nansum(irrg_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # # ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # # ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+
+        ax5.bar(xticks[0],np.nansum(disk_b5) + np.nansum(sph_b5[subset_b5])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[1],np.nansum(disk_sph_b5) + np.nansum(sph_b5[subset_b5])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[2],np.nansum(sph_b5) - np.nansum(sph_b5[subset_b5])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[3],np.nansum(irrg_b5) - np.nansum(irrg_b5[subset_b5])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[4],np.nansum(ps_b5) - np.nansum(ps_b5[subset_b5])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+
+        ax5.errorbar(xticks[0],np.nansum(disk_b5) + np.nansum(sph_b5[subset_b5])*err_scale[0],yerr=np.nansum(sph_b5[subset_b5])*err_scale[0],fmt='o',color='k')
+        ax5.errorbar(xticks[1],np.nansum(disk_sph_b5) + np.nansum(sph_b5[subset_b5])*err_scale[1],yerr=np.nansum(sph_b5[subset_b5])*err_scale[1],fmt='o',color='k')
+        ax5.errorbar(xticks[2],np.nansum(sph_b5) - np.nansum(sph_b5[subset_b5])*err_scale[2],yerr=np.nansum(sph_b5[subset_b5])*err_scale[2],fmt='o',color='k')
+        # ax1.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
+        # ax1.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
+        
+
+
 
         if flag == 'tf' or flag == 'TF':
             ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
