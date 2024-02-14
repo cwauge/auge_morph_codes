@@ -46,7 +46,7 @@ class CutoutPlot():
         
     def plot(self,nrows=1,ncols=1,savestring=' ',show=False,save=False,title=[' '],stretch=[0.1],figsize=[8,8]):
         fig = plt.figure(figsize=(figsize[0],figsize[1]))
-        gs = fig.add_gridspec(nrows=nrows,ncols=ncols,wspace=0.1,hspace=0.1,left=0.02,right=0.98,bottom=0.02,top=0.95)
+        gs = fig.add_gridspec(nrows=nrows,ncols=ncols,wspace=0.1,hspace=0.05,left=0.02,right=0.98,bottom=0.02,top=0.99)
         self.pull_data()
         for i in range(self.fshape):
             ax1 = fig.add_subplot(gs[i])
@@ -70,8 +70,9 @@ class CutoutPlot():
         self.pdata = pdata
 
     def plot_im(self,ax,dat,title = '',stretch=0.01):
-        ax.set_title(title)
+        # ax.set_title(title)
         self.im = ax.imshow(dat,norm=LogNorm(vmin=stretch,vmax=np.max(dat)),cmap='gray')
+        ax.text(0.05,0.9,title,color='white',bbox=dict(facecolor='k',edgecolor='white'),transform=ax.transAxes)
 
 
 
