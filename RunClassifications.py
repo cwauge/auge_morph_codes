@@ -153,7 +153,7 @@ lilly_x, lilly_y = lilly_plot_comp.Lilly_to_Auge()
 
 # wolf_plot_comp.hist_comp_2D('wolf_lilly_comp',wolf_y,lilly_y,xlabel='Wolf Classifications',ylabel='Lilly Classifications',IDx=wolf_ID_out,IDy=lilly_ID,match_IDs=True)
 
-wolf_plot_comp.hist_comp_2D('Multi_comp',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Other Classifiers',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True,multi=True,x_in2=lilly_x,y_in2=lilly_y,IDx2=morph_ID,IDy2=lilly_ID)
+wolf_plot_comp.hist_comp_2D('Multi_comp_frac2',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Other Classifiers',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True,multi=True,x_in2=lilly_x,y_in2=lilly_y,IDx2=morph_ID,IDy2=lilly_ID)
 
 
 # wolf_plot_comp.hist_comp_2D_split('wolf_comp_zbin',wolf_x, wolf_y, xlabel='Auge Classifications', ylabel='Wolf Classifications', IDx=morph_ID, IDy=wolf_ID,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
