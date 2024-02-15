@@ -10,8 +10,8 @@ from matplotlib.collections import LineCollection
 from match import match
 from Morph_Plots import Plotter
 
-def main(in_dict):
-    comp_plots = Morph_Compare(in_dict)
+def main(auge_dict, in_dict):
+    comp_plots = Morph_Compare(auge_dict, in_dict)
 
 
 class Morph_Compare(Plotter):
@@ -20,10 +20,11 @@ class Morph_Compare(Plotter):
     Need a function to translate each of the variety of classifications used for different clssifiers
     '''
 
-    def __init__(self,auge_dict,in_dict):
+    def __init__(self,auge_dict,in_dict,in_file=None):
         self.in_dict = in_dict
         self.auge_keys = list(auge_dict.keys())
         self.dict = auge_dict
+        self.in_file = in_file
 
         self.disk = self.dict['Disk']
         self.disk_sph = self.dict['Disk-Spheroid']
@@ -36,15 +37,67 @@ class Morph_Compare(Plotter):
         self.tf_f = self.dict['TF_flag']
         self.ps_f = self.dict['PS_flag']
 
-        print('here')
-        print(self.disk[0:20])
-        print(self.blank[0:20])
-
     def Jarvis_to_Auge(self):
         Jarvis_keys = list(self.in_dict.keys())
         Jarvis_values = list(self.in_dict.values())
         self.keys = Jarvis_keys
         self.values = Jarvis_values
+
+    def Lilly_to_Auge(self):
+        
+        # lilly_id = np.asarray(self.in_file['ID'])
+        # lilly_class = np.asarray(self.in_file['class'])
+
+        # lilly_class[lilly_class == 'disk'] = 1
+        # lilly_class[lilly_class == 'disk_sph'] = 2
+        # lilly_class[lilly_class == 'sph'] = 3
+        # lilly_class[lilly_class == 'irrg'] = 4
+        # lilly_class[lilly_class == 'ps'] = 5
+
+        Lilly_keys = list(self.in_dict.keys())
+        Lilly_values = list(self.in_dict.values())
+        self.keys = Lilly_keys
+        self.values = Lilly_values
+
+        in_disk = self.in_dict['disk']
+        in_disk_sph = self.in_dict['disk_sph']
+        in_sph = self.in_dict['sph']
+        in_irrg = self.in_dict['irrg']
+        in_ps = self.in_dict['ps']
+        in_unc = np.zeros(np.shape(self.in_dict['disk']))
+
+        in_disk_sph[in_disk_sph == 1] += 1
+        in_sph[in_sph == 1] += 2
+        in_irrg[in_irrg == 1] += 3
+        in_ps[in_ps == 1] += 4
+        in_unc[in_unc == 1] += 5
+
+        # self.disk_sph += 1
+        # self.sph += 2
+        # self.irrg += 3
+        # self.ps += 4
+        # self.unc += 5
+        # self.blank += 5
+        # self.merger_f += 7
+        # self.tf_f += 8
+        # self.ps_f += 9
+
+        auge_numb_array = np.array([self.disk,self.disk_sph,self.sph,self.irrg,self.ps,self.unc,self.blank],dtype=float)
+        auge_numb_array[np.isnan(auge_numb_array)] = 0
+        auge_numb_1d = np.sum(auge_numb_array,axis=0)
+
+        # auge_numb_1d = np.concatenate(auge_numb_array)
+        in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
+        in_numb_array[np.isnan(in_numb_array)] = 0
+        in_numb_1d = np.sum(in_numb_array,axis=0)
+        # in_numb_1d = np.concatenate(in_numb_array)
+
+        print(in_numb_1d)
+
+        return auge_numb_1d, in_numb_1d
+
+
+
     
     def Wolf_to_Auge(self):
         Wolf_keys = list(self.in_dict.keys())
@@ -152,12 +205,6 @@ class Morph_Compare(Plotter):
         auge_numb_array[np.isnan(auge_numb_array)] = 0
         auge_numb_1d = np.sum(auge_numb_array,axis=0)
 
-        print('auge array')
-        print(auge_numb_array)
-        print(auge_numb_1d)
-        print(np.shape(auge_numb_1d))
-        print(auge_numb_1d[0])
-
         # auge_numb_1d = np.concatenate(auge_numb_array)
         in_numb_array = np.array([in_disk,in_disk_sph,in_sph,in_irrg,in_ps,in_unc],dtype=float)
         in_numb_array[np.isnan(in_numb_array)] = 0
@@ -166,21 +213,37 @@ class Morph_Compare(Plotter):
 
         return auge_numb_1d, in_numb_1d
 
+    def Wolf_match_Lilly(self,wolf_array):
+        fill_array = np.zerops(np.shape(wolf_array))
+        
 
-    def hist_comp_2D(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None):
+    def hist_comp_2D(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,
+                     multi=False,x_in2=None,y_in2=None,IDx2=None,IDy2=None):
 
         if match_IDs:
             ix, iy = match(IDx,IDy)
             x = x_in[ix]
             y = y_in[iy]
             IDx, IDy = IDx[ix], IDy[iy]
+            print(x)
+            print(y)
+            if multi:
+                ix2, iy2 = match(IDx2,IDy2)
+                x2 = x_in2[ix2]
+                y2 = y_in2[iy2]
+
+                x = np.append(x,x2)
+                y = np.append(y,y2)
+                print(x)
+                print(y)
         else:
             x = x_in
             y = y_in
 
-
         x = x[y != 0]
         y = y[y != 0]
+
+        print(len(y[y == 3]))
 
         xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
         xlabels=['D','Ds','S','Ir','PS','Unc']
@@ -189,6 +252,7 @@ class Morph_Compare(Plotter):
 
         ax = fig.add_subplot(111)
         hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(1,8))
+        print(hh)
         for i in range(len(yy)-1):
             for j in range(len(xx)-1):
                 ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
@@ -204,9 +268,6 @@ class Morph_Compare(Plotter):
         plt.colorbar()
         plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
-
-        print(np.shape(hh))
-        print(hh)
 
 
     def hist_comp_2D_split(self,savestring,x_in,y_in,xlabel='',ylabel='',match_IDs=False,IDx=None,IDy=None,cond=False,cond_var=None,cond_lim=None):

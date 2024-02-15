@@ -4,7 +4,7 @@ Script to use read_vis_class.py and Morph_Plots.py to read in data and make plot
 '''
 
 import numpy as np
-from astropy.io import fits 
+from astropy.io import fits, ascii
 from read_vis_class import Read_File
 from Morph_Plots import Plotter
 from Morph_Shape_Plots import Shape_Plotter
@@ -39,10 +39,10 @@ check_sed = check_sed[check_sed == 'GOOD']
 
 sed_id = np.asarray(sed_id,dtype=float)
 
-sed_id[sed_field == 'COSMOS'] += 0.1
-sed_id[sed_field == 'S82X'] += 0.2
-sed_id[sed_field == 'GOODS-N'] += 0.3
-sed_id[sed_field == 'GOODS-S'] += 0.4
+# sed_id[sed_field == 'COSMOS'] += 0.1
+# sed_id[sed_field == 'S82X'] += 0.2
+# sed_id[sed_field == 'GOODS-N'] += 0.3
+# sed_id[sed_field == 'GOODS-S'] += 0.4
 
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
 inf = Read_File('Auge_Classifications_read_total.xlsx')
@@ -53,10 +53,10 @@ data = inf.data()    # Data of file. Array of nans and Xs. No IDs or notes
 morph_ID = inf.IDs()       # ID column of file
 morph_field = inf.field()
 
-morph_ID[morph_field == 'COSMOS'] += 0.1
-morph_ID[morph_field == 'S821'] += 0.2
-morph_ID[morph_field == 'GOODSN'] += 0.3
-morph_ID[morph_field == 'GOODSS'] += 0.4
+# morph_ID[morph_field == 'COSMOS'] += 0.1
+# morph_ID[morph_field == 'S821'] += 0.2
+# morph_ID[morph_field == 'GOODSN'] += 0.3
+# morph_ID[morph_field == 'GOODSS'] += 0.4
 
 inf.x_to_one(data)   # Turn the Xs in the data array to 1s
 
@@ -119,6 +119,15 @@ wolf_ID_out = np.asarray(wolf_ID_out,dtype=int)
 
 wolf_dict = wolf_inf.make_dict(wolf_cols,wolf_data,transpose=True)
 
+lilly_inf = Read_File('Lilly_classifications2.csv',path='/Users/connor_auge/Research/Disertation/morphology/visual/classifications/')
+lilly_inf.open(type='csv')
+lilly_cols = lilly_inf.columns()
+lilly_data = lilly_inf.data()
+lilly_ID = lilly_inf.IDs()
+
+lilly_dict = lilly_inf.make_dict(lilly_cols,lilly_data,transpose=True)
+
+print(lilly_cols)
 
 plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
@@ -134,10 +143,20 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # jwst_plot_comp.hist_comp_2D('jwst_comp',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
 # jwst_plot_comp.hist_comp_2D_split('jwst_comp_zbin',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
-# wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
-# wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
+wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
+wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
 # wolf_plot_comp.hist_comp_2D('wolf_comp',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
-# wolf_plot_comp.hist_comp_2D_split('jwst_comp_zbin',wolf_x, wolf_y, xlabel='Auge Classifications', ylabel='Wolf Classifications', IDx=morph_ID, IDy=wolf_ID,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
+
+lilly_plot_comp = Morph_Compare(dict_out,lilly_dict)
+lilly_x, lilly_y = lilly_plot_comp.Lilly_to_Auge()
+# lilly_plot_comp.hist_comp_2D('lilly_comp',lilly_x,lilly_y,xlabel='Auge Classifications',ylabel='Lilly Classifications',IDx=morph_ID,IDy=lilly_ID,match_IDs=True)
+
+# wolf_plot_comp.hist_comp_2D('wolf_lilly_comp',wolf_y,lilly_y,xlabel='Wolf Classifications',ylabel='Lilly Classifications',IDx=wolf_ID_out,IDy=lilly_ID,match_IDs=True)
+
+wolf_plot_comp.hist_comp_2D('Multi_comp',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Other Classifiers',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True,multi=True,x_in2=lilly_x,y_in2=lilly_y,IDx2=morph_ID,IDy2=lilly_ID)
+
+
+# wolf_plot_comp.hist_comp_2D_split('wolf_comp_zbin',wolf_x, wolf_y, xlabel='Auge Classifications', ylabel='Wolf Classifications', IDx=morph_ID, IDy=wolf_ID,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
@@ -147,14 +166,14 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac2',flag='tf',bins='shape',fractional='bin',save=True)
-plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot_err',flag='tf',bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+# plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot_err',flag='tf',bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
 
-# plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.38,0.62,0.47,0.0,0.0])
-# plot.bar('_new/total_bar_tf_s82xerr2',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.47,0.47,0.72,0.0,0.0])
-plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+# # plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.38,0.62,0.47,0.0,0.0])
+# # plot.bar('_new/total_bar_tf_s82xerr2',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.47,0.47,0.72,0.0,0.0])
+# plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
-plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+# plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
 # plot.bar('_new/total_bar_tf_s82x',flag='tf',save=True)
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
