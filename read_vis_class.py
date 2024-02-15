@@ -29,8 +29,35 @@ class Read_File():
                 self.fdata = hdul[1].data 
 
         elif type == 'csv':
-            self.fdata = ascii.read(self.path+self.fname)
-            self.fcols = self.data.columns
+            # inf = ascii.read(self.path+self.fname)
+            # self.fcols = np.asarray(inf.columns)
+            # self.fdata = np.asarray(inf.data)
+            # self.fID = np.asarray(inf['ID'])
+
+            hdul = pd.read_csv(self.path+self.fname)
+            try:
+                self.fnotes = hdul['Notes'].to_numpy()
+                hdul_no_notes = hdul.drop(labels='Notes',axis=1)
+            except KeyError:
+                self.fnotes = ['No notes in file']
+                hdul_no_notes = hdul
+
+            try:
+                self.ffield = hdul['Field'].to_numpy()
+                hdul_no_field = hdul_no_notes.drop(labels='Field',axis=1)
+            except KeyError:
+                self.ffield = ['No field specified in file']
+                hdul_no_field = hdul
+
+                self.fID = hdul['ID'].to_numpy()
+                hdul_short = hdul_no_field.drop(labels='ID',axis=1)
+            self.fcols = hdul_short.columns.to_numpy()
+            self.fdata = hdul_short.to_numpy()
+
+            self.fdata_long = hdul_no_notes.to_numpy()
+            self.fcols_long = hdul_no_notes.columns.to_numpy()
+                
+
 
         elif type =='xlsx':
             hdul = pd.read_excel(self.path+self.fname)
