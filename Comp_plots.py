@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import matplotlib.gridspec as gridspec
 from matplotlib.collections import LineCollection
+import matplotlib.patheffects as PathEffects
 from match import match
 from Morph_Plots import Plotter
 
@@ -67,8 +68,8 @@ class Morph_Compare(Plotter):
         in_unc = np.zeros(np.shape(self.in_dict['disk']))
 
         in_disk_sph[in_disk_sph == 1] += 1
-        in_sph[in_sph == 1] += 2
-        in_irrg[in_irrg == 1] += 3
+        in_sph[in_sph == 1] += 3
+        in_irrg[in_irrg == 1] += 2
         in_ps[in_ps == 1] += 4
         in_unc[in_unc == 1] += 5
 
@@ -91,8 +92,6 @@ class Morph_Compare(Plotter):
         in_numb_array[np.isnan(in_numb_array)] = 0
         in_numb_1d = np.sum(in_numb_array,axis=0)
         # in_numb_1d = np.concatenate(in_numb_array)
-
-        print(in_numb_1d)
 
         return auge_numb_1d, in_numb_1d
 
@@ -122,24 +121,24 @@ class Morph_Compare(Plotter):
             elif np.isnan(self.in_dict['Disk'][i]):
                 if np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
                     if ~np.isnan(self.in_dict['Merger'][i]):
-                        mc.append(4) # irreg
+                        mc.append(3) # irreg
                     elif ~np.isnan(self.in_dict['ps'][i]) & np.isnan(self.in_dict['Merger'][i]):
                         mc.append(5) # ps
                     else:
                         mc.append(-99)
 
                 elif ~np.isnan(self.in_dict['Sph_prom'][i]) & np.isnan(self.in_dict['Sph_notic'][i]):
-                    mc.append(3) # sph
+                    mc.append(4) # sph
                 elif np.isnan(self.in_dict['Sph_prom'][i]) & ~np.isnan(self.in_dict['Sph_notic'][i]):
-                    mc.append(3) # sph
+                    mc.append(4) # sph
             else:
                 mc.append(7)
 
         mc = np.asarray(mc,dtype=float)
 
         self.disk_sph += 1
-        self.sph += 2
-        self.irrg += 3
+        self.sph += 3
+        self.irrg += 2
         self.ps += 4
         self.unc += 5
         self.blank += 5
@@ -181,8 +180,8 @@ class Morph_Compare(Plotter):
         # to match my classification scheme
         in_disk = self.in_dict['Disk']
         in_disk_sph = self.in_dict['Disk-Spheroid']+1
-        in_sph = self.in_dict['Spheroid']+2
-        in_irrg = self.in_dict['Irregular']+3
+        in_sph = self.in_dict['Spheroid']+3
+        in_irrg = self.in_dict['Irregular']+2
         in_ps = self.in_dict['PS']+4
         in_unc = self.in_dict['Unclassifiable']+5
         in_blank = self.in_dict['Blank']+5
@@ -190,8 +189,8 @@ class Morph_Compare(Plotter):
         # in_tf_f = self.in_dict['TF_flag']+8
         # in_ps_f = self.in_dict['PS_flag']+9
         self.disk_sph += 1
-        self.sph += 2
-        self.irrg += 3
+        self.sph += 3
+        self.irrg += 2
         self.ps += 4
         self.unc += 5
         self.blank += 5
@@ -225,8 +224,7 @@ class Morph_Compare(Plotter):
             x = x_in[ix]
             y = y_in[iy]
             IDx, IDy = IDx[ix], IDy[iy]
-            print(x)
-            print(y)
+
             if multi:
                 ix2, iy2 = match(IDx2,IDy2)
                 x2 = x_in2[ix2]
@@ -234,8 +232,6 @@ class Morph_Compare(Plotter):
 
                 x = np.append(x,x2)
                 y = np.append(y,y2)
-                print(x)
-                print(y)
         else:
             x = x_in
             y = y_in
@@ -243,21 +239,20 @@ class Morph_Compare(Plotter):
         x = x[y != 0]
         y = y[y != 0]
 
-        print(len(y[y == 3]))
-
         xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
-        xlabels=['D','Ds','S','Ir','PS','Unc']
+        xlabels=['Disk','Disk-Sph','Irregular','Spheroid','PS','Unc']
 
-        fig = plt.figure(figsize=(9,9))
+        fig = plt.figure(figsize=(10,10))
 
         ax = fig.add_subplot(111)
         hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(1,8))
-        print(hh)
         for i in range(len(yy)-1):
             for j in range(len(xx)-1):
-                ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
-        ax.set_xticklabels(xlabels)
-        ax.set_yticklabels(xlabels)
+                # txt = ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
+                txt = ax.text(xx[j]+0.5,yy[i]+0.5,np.round((hh.T[i,j]/np.sum(hh[j])),2),color='w',ha='center',va='center',fontweight='bold')
+                txt.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='k')])
+        ax.set_xticklabels(xlabels,fontsize=18)
+        ax.set_yticklabels(xlabels,fontsize=18)
         ax.set_xticks(xticks)
         ax.set_yticks(xticks)
         plt.title(f'N = {len(x)}')
@@ -265,7 +260,11 @@ class Morph_Compare(Plotter):
         plt.ylim(1,7)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+        plt.xticks(rotation=35, ha='center')
+        plt.yticks(rotation=35, ha='right')
+
         plt.colorbar()
+        plt.tight_layout()
         plt.savefig(f'/Users/connor_auge/Desktop/morph_comp/{savestring}')
         plt.show()
 
@@ -297,7 +296,7 @@ class Morph_Compare(Plotter):
         y = y[y != 0]
 
         xticks = [1.5,2.5,3.5,4.5,5.5,6.5]
-        xlabels=['D','Ds','S','Ir','PS','Unc']
+        xlabels=['Disk','Disk-Sph','Irregular','Spheroid','Point Source','Unc']
 
         fig = plt.figure(figsize=(18,8))
         gs = fig.add_gridspec(nrows=1,ncols=4,width_ratios=[3,0.25,3,0.25],wspace=0.35)
