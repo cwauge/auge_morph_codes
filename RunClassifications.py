@@ -18,14 +18,16 @@ with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_AL
     sed_data = hdul[1].data 
 
 sed_field = sed_data['field']
-sed_id = sed_data['id']#[sed_field == 'COSMOS']
-sed_z = sed_data['z']#[sed_field == 'COSMOS']
-sed_x = sed_data['x']#[sed_field == 'COSMOS']
-sed_y = sed_data['y']#[sed_field == 'COSMOS']
-sed_Lx = sed_data['Lx']#[sed_field == 'COSMOS']
-sed_norm = sed_data['norm']#[sed_field == 'COSMOS']
-sed_shape = sed_data['shape']#[sed_field == 'COSMOS']
-check_sed = sed_data['check6']#[sed_field == 'COSMOS']
+sed_id = sed_data['id'][sed_field == 'S82X']
+sed_z = sed_data['z'][sed_field == 'S82X']
+sed_x = sed_data['x'][sed_field == 'S82X']
+sed_y = sed_data['y'][sed_field == 'S82X']
+sed_Lx = sed_data['Lx'][sed_field == 'S82X']
+sed_norm = sed_data['norm'][sed_field == 'S82X']
+sed_shape = sed_data['shape'][sed_field == 'S82X']
+check_sed = sed_data['check6'][sed_field == 'S82X']
+
+sed_field = sed_field[sed_field == 'S82X']
 
 sed_field = sed_field[check_sed == 'GOOD']
 sed_id = sed_id[check_sed == 'GOOD']
@@ -44,8 +46,9 @@ sed_id = np.asarray(sed_id,dtype=float)
 # sed_id[sed_field == 'GOODS-N'] += 0.3
 # sed_id[sed_field == 'GOODS-S'] += 0.4
 
+inf = Read_File('S82X_Classifications_read.xlsx')
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
-inf = Read_File('Auge_Classifications_read_total.xlsx')
+# inf = Read_File('Auge_Classifications_read_total.xlsx')
 inf.open(type='xlsx')
 
 cols = inf.columns() # Columns of file. Name of classification
@@ -129,7 +132,7 @@ lilly_dict = lilly_inf.make_dict(lilly_cols,lilly_data,transpose=True)
 
 print(lilly_cols)
 
-plot = Plotter(cols,dict_out)
+plot = Plotter(cols_hsc,dict_out_hsc)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
 # hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
@@ -143,17 +146,16 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # jwst_plot_comp.hist_comp_2D('jwst_comp',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
 # jwst_plot_comp.hist_comp_2D_split('jwst_comp_zbin',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
-wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
-wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
+# wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
+# wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
 # wolf_plot_comp.hist_comp_2D('wolf_comp',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Wolf Classifications',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True)
 
-lilly_plot_comp = Morph_Compare(dict_out,lilly_dict)
-lilly_x, lilly_y = lilly_plot_comp.Lilly_to_Auge()
+# lilly_plot_comp = Morph_Compare(dict_out,lilly_dict)
+# lilly_x, lilly_y = lilly_plot_comp.Lilly_to_Auge()
 # lilly_plot_comp.hist_comp_2D('lilly_comp',lilly_x,lilly_y,xlabel='Auge Classifications',ylabel='Lilly Classifications',IDx=morph_ID,IDy=lilly_ID,match_IDs=True)
 
 # wolf_plot_comp.hist_comp_2D('wolf_lilly_comp',wolf_y,lilly_y,xlabel='Wolf Classifications',ylabel='Lilly Classifications',IDx=wolf_ID_out,IDy=lilly_ID,match_IDs=True)
-
-wolf_plot_comp.hist_comp_2D('Multi_comp_frac2',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Other Classifiers',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True,multi=True,x_in2=lilly_x,y_in2=lilly_y,IDx2=morph_ID,IDy2=lilly_ID)
+# wolf_plot_comp.hist_comp_2D('Multi_comp_frac2',wolf_x,wolf_y,xlabel='Auge Classifications',ylabel='Other Classifiers',IDx=morph_ID,IDy=wolf_ID_out,match_IDs=True,multi=True,x_in2=lilly_x,y_in2=lilly_y,IDx2=morph_ID,IDy2=lilly_ID)
 
 
 # wolf_plot_comp.hist_comp_2D_split('wolf_comp_zbin',wolf_x, wolf_y, xlabel='Auge Classifications', ylabel='Wolf Classifications', IDx=morph_ID, IDy=wolf_ID,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
@@ -171,7 +173,10 @@ wolf_plot_comp.hist_comp_2D('Multi_comp_frac2',wolf_x,wolf_y,xlabel='Auge Classi
 
 # # plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.38,0.62,0.47,0.0,0.0])
 # # plot.bar('_new/total_bar_tf_s82xerr2',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.47,0.47,0.72,0.0,0.0])
-# plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+# plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
+
+
+plot.bar('_new/total_bar_tf_COSMOS_HSC',flag='tf',save=True,fractional=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
 
 # plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
