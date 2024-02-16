@@ -18,16 +18,16 @@ with fits.open('/Users/connor_auge/Research/Disertation/catalogs/AHA_SEDs_out_AL
     sed_data = hdul[1].data 
 
 sed_field = sed_data['field']
-sed_id = sed_data['id'][sed_field == 'S82X']
-sed_z = sed_data['z'][sed_field == 'S82X']
-sed_x = sed_data['x'][sed_field == 'S82X']
-sed_y = sed_data['y'][sed_field == 'S82X']
-sed_Lx = sed_data['Lx'][sed_field == 'S82X']
-sed_norm = sed_data['norm'][sed_field == 'S82X']
-sed_shape = sed_data['shape'][sed_field == 'S82X']
-check_sed = sed_data['check6'][sed_field == 'S82X']
+sed_id = sed_data['id']#[sed_field == 'S82X']
+sed_z = sed_data['z']#[sed_field == 'S82X']
+sed_x = sed_data['x']#[sed_field == 'S82X']
+sed_y = sed_data['y']#[sed_field == 'S82X']
+sed_Lx = sed_data['Lx']#[sed_field == 'S82X']
+sed_norm = sed_data['norm']#[sed_field == 'S82X']
+sed_shape = sed_data['shape']#[sed_field == 'S82X']
+check_sed = sed_data['check6']#[sed_field == 'S82X']
 
-sed_field = sed_field[sed_field == 'S82X']
+sed_field = sed_field#[sed_field == 'S82X']
 
 sed_field = sed_field[check_sed == 'GOOD']
 sed_id = sed_id[check_sed == 'GOOD']
@@ -46,9 +46,9 @@ sed_id = np.asarray(sed_id,dtype=float)
 # sed_id[sed_field == 'GOODS-N'] += 0.3
 # sed_id[sed_field == 'GOODS-S'] += 0.4
 
-inf = Read_File('S82X_Classifications_read.xlsx')
+# inf = Read_File('S82X_Classifications_read.xlsx')
 # inf = Read_File('Auge_COSMOS_Classifications_read.xlsx')
-# inf = Read_File('Auge_Classifications_read_total.xlsx')
+inf = Read_File('Auge_Classifications_read_total.xlsx')
 inf.open(type='xlsx')
 
 cols = inf.columns() # Columns of file. Name of classification
@@ -130,9 +130,8 @@ lilly_ID = lilly_inf.IDs()
 
 lilly_dict = lilly_inf.make_dict(lilly_cols,lilly_data,transpose=True)
 
-print(lilly_cols)
 
-plot = Plotter(cols_hsc,dict_out_hsc)
+plot = Plotter(cols,dict_out)
 plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
 # hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
@@ -176,7 +175,8 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
 
 
-plot.bar('_new/total_bar_tf_COSMOS_HSC',flag='tf',save=True,fractional=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
+plot.bar('_new/total_bar_frac_all',flag=['tf','ps','merger'],save=True,fractional=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
+plot.bar('_new/total_bar_all',flag=['tf','ps','merger'],save=True,fractional=False,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
 
 # plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
