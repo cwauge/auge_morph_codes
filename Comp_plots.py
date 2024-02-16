@@ -248,8 +248,8 @@ class Morph_Compare(Plotter):
         hh, xx, yy, ii = plt.hist2d(x,y,bins=np.arange(1,8))
         for i in range(len(yy)-1):
             for j in range(len(xx)-1):
-                # txt = ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
-                txt = ax.text(xx[j]+0.5,yy[i]+0.5,np.round((hh.T[i,j]/np.sum(hh[j])),2),color='w',ha='center',va='center',fontweight='bold')
+                txt = ax.text(xx[j]+0.5,yy[i]+0.5,hh.T[i,j],color='w',ha='center',va='center',fontweight='bold')
+                # txt = ax.text(xx[j]+0.5,yy[i]+0.5,np.round((hh.T[i,j]/np.sum(hh[j])),2),color='w',ha='center',va='center',fontweight='bold')
                 txt.set_path_effects([PathEffects.withStroke(linewidth=2, foreground='k')])
         ax.set_xticklabels(xlabels,fontsize=18)
         ax.set_yticklabels(xlabels,fontsize=18)
