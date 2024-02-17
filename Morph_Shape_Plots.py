@@ -87,8 +87,6 @@ class Shape_Plotter(Plotter):
             err_scale = np.zeros(5) # Number of classifications being plotted
             subset = np.full(np.shape(self.disk), True) 
 
-        print(len(subset))
-
 
         if bins == 'shape':
             b1 = self.shape_match == 1
@@ -112,7 +110,6 @@ class Shape_Plotter(Plotter):
         merg_f_b1,   merg_f_b2,   merg_f_b3,   merg_f_b4,   merg_f_b5   = merg_f_match[b1],   merg_f_match[b2],   merg_f_match[b3],   merg_f_match[b4],   merg_f_match[b5]
         ps_f_b1,     ps_f_b2,     ps_f_b3,     ps_f_b4,     ps_f_b5     = ps_f_match[b1],     ps_f_match[b2],     ps_f_match[b3],     ps_f_match[b4],     ps_f_match[b5]
         subset_b1, subset_b2, subset_b3, subset_b4, subset_b5 = subset[b1], subset[b2], subset[b3], subset[b4], subset[b5]
-        print(len(subset_b1))
 
         if fractional == 'bin':
             factor_b1 = len(self.shape_match[b1])
@@ -159,6 +156,7 @@ class Shape_Plotter(Plotter):
         gs = fig.add_gridspec(nrows=5, ncols=1, left=0.1, right=0.9, top=0.99, bottom=0.075, hspace=0.05)
 
         xlabels = self.main_classes[:-2]
+        xlabels = ['Disk','Disk-Sph','Irregular','Spheroid','PS']
         xticks = np.linspace(0,15,len(xlabels))
 
         ### set up subplot 1
@@ -169,59 +167,50 @@ class Shape_Plotter(Plotter):
         ax1.grid()
 
         # plot subplot data 
-        # ax1.bar(xticks[0],np.nansum(disk_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[1],np.nansum(disk_sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[2],np.nansum(sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[3],np.nansum(irrg_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
-        # # ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[0],np.nansum(disk_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[1],np.nansum(disk_sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[3],np.nansum(sph_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[2],np.nansum(irrg_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[5],np.nansum(unc_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
         # # ax1.bar(xticks[6],np.nansum(blank_b1)/factor_b1,color='gray',alpha=0.75,width=1.5)
 
-        print(len(sph_b1))
 
-        ax1.bar(xticks[0],np.nansum(disk_b1) + np.nansum(sph_b1[subset_b1])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[1],np.nansum(disk_sph_b1) + np.nansum(sph_b1[subset_b1])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[2],np.nansum(sph_b1) - np.nansum(sph_b1[subset_b1])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset_b1])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax1.bar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset_b1])*err_scale[4],color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[0],np.nansum(disk_b1) + np.nansum(sph_b1[subset_b1])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[1],np.nansum(disk_sph_b1) + np.nansum(sph_b1[subset_b1])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[2],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset_b1])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[3],np.nansum(sph_b1) - np.nansum(sph_b1[subset_b1])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax1.bar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset_b1])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
-        ax1.errorbar(xticks[0],np.nansum(disk_b1) + np.nansum(sph_b1[subset_b1])*err_scale[0],yerr=np.nansum(sph_b1[subset_b1])*err_scale[0],fmt='o',color='k')
-        ax1.errorbar(xticks[1],np.nansum(disk_sph_b1) + np.nansum(sph_b1[subset_b1])*err_scale[1],yerr=np.nansum(sph_b1[subset_b1])*err_scale[1],fmt='o',color='k')
-        ax1.errorbar(xticks[2],np.nansum(sph_b1) - np.nansum(sph_b1[subset_b1])*err_scale[2],yerr=np.nansum(sph_b1[subset_b1])*err_scale[2],fmt='o',color='k')
-        # ax1.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        # ax1.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
-        
+        # if flag == 'tf' or flag == 'TF':
+        #     ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+        #     ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[2],np.nansum(irrg_b1[self.match_flags(sph_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[3],np.nansum(sph_b1)/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac1)}%', transform=ax1.transAxes,color='r')
 
+        # elif flag == 'ps' or flag == 'PS':
+        #     ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+        #     ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[2],np.nansum(irrg_b1[self.match_flags(sph_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[3],np.nansum(sph_b1[self.match_flags(irrg_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.text(0.05, 0.7, f'n = {np.round(ps_flag_frac1)}', transform=ax1.transAxes,color='b')
 
-        if flag == 'tf' or flag == 'TF':
-            ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
-            ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[2],np.nansum(sph_b1[self.match_flags(sph_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[3],np.nansum(irrg_b1)/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,tf_f_b1,output='loc')])/factor_b1,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac1)}%', transform=ax1.transAxes,color='r')
-
-        elif flag == 'ps' or flag == 'PS':
-            ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
-            ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[2],np.nansum(sph_b1[self.match_flags(sph_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[3],np.nansum(irrg_b1[self.match_flags(irrg_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,ps_f_b1,output='loc')])/factor_b1,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.text(0.05, 0.7, f'n = {np.round(ps_flag_frac1)}', transform=ax1.transAxes,color='b')
-
-        elif flag == 'merger' or flag == 'Merger':
-            ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
-            ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[2],np.nansum(sph_b1[self.match_flags(sph_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[3],np.nansum(irrg_b1[self.match_flags(irrg_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax1.text(0.05, 0.7, f'n = {np.round(merg_flag_frac1)}', transform=ax1.transAxes,color='g')
+        # elif flag == 'merger' or flag == 'Merger':
+        #     ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+        #     ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[2],np.nansum(irrg_b1[self.match_flags(sph_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[3],np.nansum(sph_b1[self.match_flags(irrg_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[5],np.nansum(unc_b1[self.match_flags(unc_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.bar(xticks[6],np.nansum(blank_b1[self.match_flags(blank_b1,merg_f_b1,output='loc')])/factor_b1,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax1.text(0.05, 0.7, f'n = {np.round(merg_flag_frac1)}', transform=ax1.transAxes,color='g')
 
 
         ### set up subplot 2
@@ -232,60 +221,54 @@ class Shape_Plotter(Plotter):
         ax2.grid()
 
         # plot subplot data
-        # ax2.bar(xticks[0],np.nansum(disk_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[1],np.nansum(disk_sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[2],np.nansum(sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[3],np.nansum(irrg_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # # ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
-        # # ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[0],np.nansum(disk_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[1],np.nansum(disk_sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[3],np.nansum(sph_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[2],np.nansum(irrg_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[5],np.nansum(unc_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[6],np.nansum(blank_b2)/factor_b2,color='gray',alpha=0.75,width=1.5)
 
-        ax2.bar(xticks[0],np.nansum(disk_b2) + np.nansum(sph_b2[subset_b2])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[1],np.nansum(disk_sph_b2) + np.nansum(sph_b2[subset_b2])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[2],np.nansum(sph_b2) - np.nansum(sph_b2[subset_b2])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[3],np.nansum(irrg_b2) - np.nansum(irrg_b2[subset_b2])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax2.bar(xticks[4],np.nansum(ps_b2) - np.nansum(ps_b2[subset_b2])*err_scale[4],color='gray',alpha=0.75,width=1.5)
-
-        ax2.errorbar(xticks[0],np.nansum(disk_b2) + np.nansum(sph_b2[subset_b2])*err_scale[0],yerr=np.nansum(sph_b2[subset_b2])*err_scale[0],fmt='o',color='k')
-        ax2.errorbar(xticks[1],np.nansum(disk_sph_b2) + np.nansum(sph_b2[subset_b2])*err_scale[1],yerr=np.nansum(sph_b2[subset_b2])*err_scale[1],fmt='o',color='k')
-        ax2.errorbar(xticks[2],np.nansum(sph_b2) - np.nansum(sph_b2[subset_b2])*err_scale[2],yerr=np.nansum(sph_b2[subset_b2])*err_scale[2],fmt='o',color='k')
-        # ax2.errorbar(xticks[3],np.nansum(irrg_b2) - np.nansum(irrg_b2[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        # ax2.errorbar(xticks[4],np.nansum(ps_b2) - np.nansum(ps_b2[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
-        
+        # ax2.bar(xticks[0],np.nansum(disk_b2) + np.nansum(sph_b2[subset_b2])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[1],np.nansum(disk_sph_b2) + np.nansum(sph_b2[subset_b2])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[2],np.nansum(irrg_b2) - np.nansum(irrg_b2[subset_b2])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[3],np.nansum(sph_b2) - np.nansum(sph_b2[subset_b2])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax2.bar(xticks[4],np.nansum(ps_b2) - np.nansum(ps_b2[subset_b2])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
 
 
-        if flag == 'tf' or flag == 'TF':
-            ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
-            ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[2],np.nansum(sph_b2[self.match_flags(sph_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[3],np.nansum(irrg_b2)/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac2)}%', transform=ax2.transAxes,color='r')
+
+        # if flag == 'tf' or flag == 'TF':
+        #     ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+        #     ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[2],np.nansum(irrg_b2[self.match_flags(irrg_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[3],np.nansum(sph_b2)/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,tf_f_b2,output='loc')])/factor_b2,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac2)}%', transform=ax2.transAxes,color='r')
 
 
-        elif flag == 'ps' or flag == 'PS':
-            ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
-            ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[2],np.nansum(sph_b2[self.match_flags(sph_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[3],np.nansum(irrg_b2[self.match_flags(irrg_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.text(0.05, 0.7, f'n = {np.round(ps_flag_frac2)}', transform=ax2.transAxes,color='b')
+        # elif flag == 'ps' or flag == 'PS':
+        #     ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+        #     ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[2],np.nansum(irrg_b2[self.match_flags(irrg_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[3],np.nansum(sph_b2[self.match_flags(sph_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,ps_f_b2,output='loc')])/factor_b2,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.text(0.05, 0.7, f'n = {np.round(ps_flag_frac2)}', transform=ax2.transAxes,color='b')
 
 
-        elif flag == 'merger' or flag == 'Merger':
-            ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
-            ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[2],np.nansum(sph_b2[self.match_flags(sph_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[3],np.nansum(irrg_b2[self.match_flags(irrg_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax2.text(0.05, 0.7, f'n = {np.round(merg_flag_frac2)}', transform=ax2.transAxes,color='g')
+        # elif flag == 'merger' or flag == 'Merger':
+        #     ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+        #     ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[2],np.nansum(irrg_b2[self.match_flags(irrg_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[3],np.nansum(sph_b2[self.match_flags(sph_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax2.bar(xticks[5],np.nansum(unc_b2[self.match_flags(unc_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax2.bar(xticks[6],np.nansum(blank_b2[self.match_flags(blank_b2,merg_f_b2,output='loc')])/factor_b2,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax2.text(0.05, 0.7, f'n = {np.round(merg_flag_frac2)}', transform=ax2.transAxes,color='g')
 
 
         
@@ -297,58 +280,50 @@ class Shape_Plotter(Plotter):
         ax3.grid()
 
         # plot subplot data
-        # ax3.bar(xticks[0],np.nansum(disk_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[1],np.nansum(disk_sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[2],np.nansum(sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[3],np.nansum(irrg_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # # ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
-        # # ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[0],np.nansum(disk_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[1],np.nansum(disk_sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[3],np.nansum(sph_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[2],np.nansum(irrg_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[5],np.nansum(unc_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[6],np.nansum(blank_b3)/factor_b3,color='gray',alpha=0.75,width=1.5)
 
-        ax3.bar(xticks[0],np.nansum(disk_b3) + np.nansum(sph_b3[subset_b3])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[1],np.nansum(disk_sph_b3) + np.nansum(sph_b3[subset_b3])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[2],np.nansum(sph_b3) - np.nansum(sph_b3[subset_b3])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[3],np.nansum(irrg_b3) - np.nansum(irrg_b3[subset_b3])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax3.bar(xticks[4],np.nansum(ps_b3) - np.nansum(ps_b3[subset_b3])*err_scale[4],color='gray',alpha=0.75,width=1.5)
-
-        ax3.errorbar(xticks[0],np.nansum(disk_b3) + np.nansum(sph_b3[subset_b3])*err_scale[0],yerr=np.nansum(sph_b3[subset_b3])*err_scale[0],fmt='o',color='k')
-        ax3.errorbar(xticks[1],np.nansum(disk_sph_b3) + np.nansum(sph_b3[subset_b3])*err_scale[1],yerr=np.nansum(sph_b3[subset_b3])*err_scale[1],fmt='o',color='k')
-        ax3.errorbar(xticks[2],np.nansum(sph_b3) - np.nansum(sph_b3[subset_b3])*err_scale[2],yerr=np.nansum(sph_b3[subset_b3])*err_scale[2],fmt='o',color='k')
-        # ax3.errorbar(xticks[3],np.nansum(irrg_b3) - np.nansum(irrg_b3[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        # ax3.errorbar(xticks[4],np.nansum(ps_b3) - np.nansum(ps_b3[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
-        
+        # ax3.bar(xticks[0],np.nansum(disk_b3) + np.nansum(sph_b3[subset_b3])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[1],np.nansum(disk_sph_b3) + np.nansum(sph_b3[subset_b3])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[2],np.nansum(irrg_b3) - np.nansum(irrg_b3[subset_b3])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[3],np.nansum(sph_b3) - np.nansum(sph_b3[subset_b3])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax3.bar(xticks[4],np.nansum(ps_b3) - np.nansum(ps_b3[subset_b3])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
 
+        # if flag == 'tf' or flag == 'TF':
+        #     ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+        #     ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[2],np.nansum(irrg_b3[self.match_flags(irrg_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[3],np.nansum(sph_b3)/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac3)}%', transform=ax3.transAxes,color='r')
 
-        if flag == 'tf' or flag == 'TF':
-            ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
-            ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[2],np.nansum(sph_b3[self.match_flags(sph_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[3],np.nansum(irrg_b3)/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,tf_f_b3,output='loc')])/factor_b3,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac3)}%', transform=ax3.transAxes,color='r')
+        # elif flag == 'ps' or flag == 'PS':
+        #     ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+        #     ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[2],np.nansum(irrg_b3[self.match_flags(irrg_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[3],np.nansum(sph_b3[self.match_flags(sph_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.text(0.05, 0.7, f'n = {np.round(ps_flag_frac3)}', transform=ax3.transAxes,color='b')
 
-        elif flag == 'ps' or flag == 'PS':
-            ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
-            ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[2],np.nansum(sph_b3[self.match_flags(sph_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[3],np.nansum(irrg_b3[self.match_flags(irrg_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,ps_f_b3,output='loc')])/factor_b3,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.text(0.05, 0.7, f'n = {np.round(ps_flag_frac3)}', transform=ax3.transAxes,color='b')
-
-        elif flag == 'merger' or flag == 'Merger':
-            ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
-            ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[2],np.nansum(sph_b3[self.match_flags(sph_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[3],np.nansum(irrg_b3[self.match_flags(irrg_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax3.text(0.05, 0.7, f'n = {np.round(merg_flag_frac3)}', transform=ax3.transAxes,color='g')
+        # elif flag == 'merger' or flag == 'Merger':
+        #     ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+        #     ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[2],np.nansum(irrg_b3[self.match_flags(irrg_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[3],np.nansum(sph_b3[self.match_flags(sph_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[5],np.nansum(unc_b3[self.match_flags(unc_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.bar(xticks[6],np.nansum(blank_b3[self.match_flags(blank_b3,merg_f_b3,output='loc')])/factor_b3,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax3.text(0.05, 0.7, f'n = {np.round(merg_flag_frac3)}', transform=ax3.transAxes,color='g')
 
 
         ### set up subplot 4
@@ -359,58 +334,50 @@ class Shape_Plotter(Plotter):
         ax4.grid()
 
         # plot subplot data
-        # ax4.bar(xticks[0],np.nansum(disk_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[1],np.nansum(disk_sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[2],np.nansum(sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[3],np.nansum(irrg_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # # ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
-        # # ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[0],np.nansum(disk_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[1],np.nansum(disk_sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[3],np.nansum(sph_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[2],np.nansum(irrg_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[5],np.nansum(unc_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[6],np.nansum(blank_b4)/factor_b4,color='gray',alpha=0.75,width=1.5)
 
-        ax4.bar(xticks[0],np.nansum(disk_b4) + np.nansum(sph_b4[subset_b4])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[1],np.nansum(disk_sph_b4) + np.nansum(sph_b4[subset_b4])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[2],np.nansum(sph_b4) - np.nansum(sph_b4[subset_b4])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[3],np.nansum(irrg_b4) - np.nansum(irrg_b4[subset_b4])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax4.bar(xticks[4],np.nansum(ps_b4) - np.nansum(ps_b4[subset_b4])*err_scale[4],color='gray',alpha=0.75,width=1.5)
-
-        ax4.errorbar(xticks[0],np.nansum(disk_b4) + np.nansum(sph_b4[subset_b4])*err_scale[0],yerr=np.nansum(sph_b4[subset_b4])*err_scale[0],fmt='o',color='k')
-        ax4.errorbar(xticks[1],np.nansum(disk_sph_b4) + np.nansum(sph_b4[subset_b4])*err_scale[1],yerr=np.nansum(sph_b4[subset_b4])*err_scale[1],fmt='o',color='k')
-        ax4.errorbar(xticks[2],np.nansum(sph_b4) - np.nansum(sph_b4[subset_b4])*err_scale[2],yerr=np.nansum(sph_b4[subset_b4])*err_scale[2],fmt='o',color='k')
-        # ax4.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        # ax4.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
-        
+        # ax4.bar(xticks[0],np.nansum(disk_b4) + np.nansum(sph_b4[subset_b4])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[1],np.nansum(disk_sph_b4) + np.nansum(sph_b4[subset_b4])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[2],np.nansum(irrg_b4) - np.nansum(irrg_b4[subset_b4])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[3],np.nansum(sph_b4) - np.nansum(sph_b4[subset_b4])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax4.bar(xticks[4],np.nansum(ps_b4) - np.nansum(ps_b4[subset_b4])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
 
+        # if flag == 'tf' or flag == 'TF':
+        #     ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+        #     ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[2],np.nansum(irrg_b4[self.match_flags(irrg_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[3],np.nansum(sph_b4)/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac4)}%', transform=ax4.transAxes,color='r')
 
-        if flag == 'tf' or flag == 'TF':
-            ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
-            ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[2],np.nansum(sph_b4[self.match_flags(sph_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[3],np.nansum(irrg_b4)/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,tf_f_b4,output='loc')])/factor_b4,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac4)}%', transform=ax4.transAxes,color='r')
+        # elif flag == 'ps' or flag == 'PS':
+        #     ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+        #     ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[2],np.nansum(irrg_b4[self.match_flags(irrg_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[3],np.nansum(sph_b4[self.match_flags(sph_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.text(0.05, 0.7, f'n = {np.round(ps_flag_frac4)}', transform=ax4.transAxes,color='b')
 
-        elif flag == 'ps' or flag == 'PS':
-            ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
-            ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[2],np.nansum(sph_b4[self.match_flags(sph_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[3],np.nansum(irrg_b4[self.match_flags(irrg_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,ps_f_b4,output='loc')])/factor_b4,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.text(0.05, 0.7, f'n = {np.round(ps_flag_frac4)}', transform=ax4.transAxes,color='b')
-
-        elif flag == 'merger' or flag == 'Merger':
-            ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
-            ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[2],np.nansum(sph_b4[self.match_flags(sph_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[3],np.nansum(irrg_b4[self.match_flags(irrg_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax4.text(0.05, 0.7, f'n = {np.round(merg_flag_frac4)}', transform=ax4.transAxes,color='g')
+        # elif flag == 'merger' or flag == 'Merger':
+        #     ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+        #     ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[2],np.nansum(irrg_b4[self.match_flags(irrg_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[3],np.nansum(sph_b4[self.match_flags(sph_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[5],np.nansum(unc_b4[self.match_flags(unc_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.bar(xticks[6],np.nansum(blank_b4[self.match_flags(blank_b4,merg_f_b4,output='loc')])/factor_b4,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax4.text(0.05, 0.7, f'n = {np.round(merg_flag_frac4)}', transform=ax4.transAxes,color='g')
 
 
 
@@ -422,67 +389,198 @@ class Shape_Plotter(Plotter):
         ax5.grid()
 
         # plot subplot data
-        # ax5.bar(xticks[0],np.nansum(disk_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[1],np.nansum(disk_sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[2],np.nansum(sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[3],np.nansum(irrg_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # # ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
-        # # ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[0],np.nansum(disk_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[1],np.nansum(disk_sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[3],np.nansum(sph_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[2],np.nansum(irrg_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[5],np.nansum(unc_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[6],np.nansum(blank_b5)/factor_b5,color='gray',alpha=0.75,width=1.5)
 
-        ax5.bar(xticks[0],np.nansum(disk_b5) + np.nansum(sph_b5[subset_b5])*err_scale[0],color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[1],np.nansum(disk_sph_b5) + np.nansum(sph_b5[subset_b5])*err_scale[1],color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[2],np.nansum(sph_b5) - np.nansum(sph_b5[subset_b5])*err_scale[2],color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[3],np.nansum(irrg_b5) - np.nansum(irrg_b5[subset_b5])*err_scale[3],color='gray',alpha=0.75,width=1.5)
-        ax5.bar(xticks[4],np.nansum(ps_b5) - np.nansum(ps_b5[subset_b5])*err_scale[4],color='gray',alpha=0.75,width=1.5)
-
-        ax5.errorbar(xticks[0],np.nansum(disk_b5) + np.nansum(sph_b5[subset_b5])*err_scale[0],yerr=np.nansum(sph_b5[subset_b5])*err_scale[0],fmt='o',color='k')
-        ax5.errorbar(xticks[1],np.nansum(disk_sph_b5) + np.nansum(sph_b5[subset_b5])*err_scale[1],yerr=np.nansum(sph_b5[subset_b5])*err_scale[1],fmt='o',color='k')
-        ax5.errorbar(xticks[2],np.nansum(sph_b5) - np.nansum(sph_b5[subset_b5])*err_scale[2],yerr=np.nansum(sph_b5[subset_b5])*err_scale[2],fmt='o',color='k')
-        # ax1.errorbar(xticks[3],np.nansum(irrg_b1) - np.nansum(irrg_b1[subset])*err_scale[3],yerr=np.nansum(self.irrg[subset])*err_scale[3],fmt='o',color='k')
-        # ax1.errorbar(xticks[4],np.nansum(ps_b1) - np.nansum(ps_b1[subset])*err_scale[4],yerr=np.nansum(self.ps[subset])*err_scale[4],fmt='o',color='k')
-        
+        # ax5.bar(xticks[0],np.nansum(disk_b5) + np.nansum(sph_b5[subset_b5])*err_scale[0],color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[1],np.nansum(disk_sph_b5) + np.nansum(sph_b5[subset_b5])*err_scale[1],color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[2],np.nansum(irrg_b5) - np.nansum(irrg_b5[subset_b5])*err_scale[2],color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[3],np.nansum(sph_b5) - np.nansum(sph_b5[subset_b5])*err_scale[3],color='gray',alpha=0.75,width=1.5)
+        # ax5.bar(xticks[4],np.nansum(ps_b5) - np.nansum(ps_b5[subset_b5])*err_scale[4],color='gray',alpha=0.75,width=1.5)
 
 
+        # if flag == 'tf' or flag == 'TF':
+        #     ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
+        #     ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[2],np.nansum(irrg_b5[self.match_flags(irrg_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[3],np.nansum(sph_b5)/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     # ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac5)}%', transform=ax5.transAxes,color='r')
 
-        if flag == 'tf' or flag == 'TF':
-            ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5,label='Tidal Features')
-            ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[2],np.nansum(sph_b5[self.match_flags(sph_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[3],np.nansum(irrg_b5)/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            # ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,tf_f_b5,output='loc')])/factor_b5,color='none',edgecolor='r',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.text(0.05, 0.7, f'n/N = {np.round(tf_flag_frac5)}%', transform=ax5.transAxes,color='r')
+        # elif flag == 'ps' or flag == 'PS':
+        #     ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
+        #     ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[2],np.nansum(irrg_b5[self.match_flags(irrg_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[3],np.nansum(sph_b5[self.match_flags(sph_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.text(0.05, 0.7, f'n = {np.round(ps_flag_frac5)}', transform=ax5.transAxes,color='b')
 
-        elif flag == 'ps' or flag == 'PS':
-            ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5,label='PS')
-            ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[2],np.nansum(sph_b5[self.match_flags(sph_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[3],np.nansum(irrg_b5[self.match_flags(irrg_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,ps_f_b5,output='loc')])/factor_b5,color='none',edgecolor='b',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.text(0.05, 0.7, f'n = {np.round(ps_flag_frac5)}', transform=ax5.transAxes,color='b')
+        # elif flag == 'merger' or flag == 'Merger':
+        #     ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
+        #     ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[2],np.nansum(irrg_b5[self.match_flags(irrg_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[3],np.nansum(sph_b5[self.match_flags(sph_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
+        #     ax5.text(0.05, 0.7, f'n = {np.round(merg_flag_frac5)}', transform=ax5.transAxes,color='g')
 
-        elif flag == 'merger' or flag == 'Merger':
-            ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5,label='Major Merger')
-            ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[2],np.nansum(sph_b5[self.match_flags(sph_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[3],np.nansum(irrg_b5[self.match_flags(irrg_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[5],np.nansum(unc_b5[self.match_flags(unc_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.bar(xticks[6],np.nansum(blank_b5[self.match_flags(blank_b5,merg_f_b5,output='loc')])/factor_b5,color='none',edgecolor='g',linewidth=2.5,alpha=0.75,width=1.5)
-            ax5.text(0.05, 0.7, f'n = {np.round(merg_flag_frac5)}', transform=ax5.transAxes,color='g')
+
+        for i in range(len(flag)):
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                flag_var1 = self.tf_f[b1]
+                flag_var2 = self.tf_f[b2]
+                flag_var3 = self.tf_f[b3]
+                flag_var4 = self.tf_f[b4]
+                flag_var5 = self.tf_f[b5]
+
+                cflag = 'r'
+                label_flag = 'Tidal Features'
+                nplace = 0.75
+
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                flag_var1 = self.ps_f[b1]
+                flag_var2 = self.ps_f[b2]
+                flag_var3 = self.ps_f[b3]
+                flag_var5 = self.ps_f[b4]
+                flag_var5 = self.ps_f[b5]
+
+                cflag = 'b'
+                label_flag = 'Point Source'
+                nplace = 0.65
+
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                flag_var1 = self.merger_f[b1]
+                flag_var2 = self.merger_f[b2]
+                flag_var3 = self.merger_f[b3]
+                flag_var4 = self.merger_f[b4]
+                flag_var5 = self.merger_f[b5]
+
+                cflag = 'g'
+                label_flag = 'Major Merger'
+                nplace = 0.55
+
+
+            if flag[i] == 'tf' or 'TF':
+                flag_frac1 = ((np.nansum(disk_b1[self.match_flags(disk_b1,flag_var1,output='loc')])+np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,flag_var1,output='loc')])+np.nansum(sph_b1[self.match_flags(sph_b1,flag_var1,output='loc')])+np.nansum(irrg_b1)+np.nansum(ps_b1[self.match_flags(ps_b1,flag_var1,output='loc')])))/(np.nansum(disk_b1)+np.nansum(disk_sph_b1)+np.nansum(sph_b1)+np.nansum(irrg_b1)+np.nansum(ps_b1))*100
+                flag_frac2 = ((np.nansum(disk_b2[self.match_flags(disk_b2,flag_var2,output='loc')])+np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,flag_var2,output='loc')])+np.nansum(sph_b2[self.match_flags(sph_b2,flag_var2,output='loc')])+np.nansum(irrg_b2)+np.nansum(ps_b2[self.match_flags(ps_b2,flag_var2,output='loc')])))/(np.nansum(disk_b2)+np.nansum(disk_sph_b2)+np.nansum(sph_b2)+np.nansum(irrg_b2)+np.nansum(ps_b2))*100
+                flag_frac3 = ((np.nansum(disk_b3[self.match_flags(disk_b3,flag_var3,output='loc')])+np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,flag_var3,output='loc')])+np.nansum(sph_b3[self.match_flags(sph_b3,flag_var3,output='loc')])+np.nansum(irrg_b3)+np.nansum(ps_b3[self.match_flags(ps_b3,flag_var3,output='loc')])))/(np.nansum(disk_b3)+np.nansum(disk_sph_b3)+np.nansum(sph_b3)+np.nansum(irrg_b3)+np.nansum(ps_b3))*100
+                flag_frac4 = ((np.nansum(disk_b4[self.match_flags(disk_b4,flag_var4,output='loc')])+np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,flag_var4,output='loc')])+np.nansum(sph_b4[self.match_flags(sph_b4,flag_var4,output='loc')])+np.nansum(irrg_b4)+np.nansum(ps_b4[self.match_flags(ps_b4,flag_var4,output='loc')])))/(np.nansum(disk_b4)+np.nansum(disk_sph_b4)+np.nansum(sph_b4)+np.nansum(irrg_b4)+np.nansum(ps_b4))*100
+                flag_frac5 = ((np.nansum(disk_b5[self.match_flags(disk_b5,flag_var5,output='loc')])+np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,flag_var5,output='loc')])+np.nansum(sph_b5[self.match_flags(sph_b5,flag_var5,output='loc')])+np.nansum(irrg_b5)+np.nansum(ps_b5[self.match_flags(ps_b5,flag_var5,output='loc')])))/(np.nansum(disk_b5)+np.nansum(disk_sph_b5)+np.nansum(sph_b5)+np.nansum(irrg_b5)+np.nansum(ps_b5))*100
+            if flag[i] == 'ps' or 'PS':
+                flag_frac1 = ((np.nansum(disk_b1[self.match_flags(disk_b1,flag_var1,output='loc')])+np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,flag_var1,output='loc')])+np.nansum(sph_b1[self.match_flags(sph_b1,flag_var1,output='loc')])+np.nansum(irrg_b1[self.match_flags(irrg_b1,flag_var1,output='loc')])+np.nansum(ps_b1)))/(np.nansum(disk_b1)+np.nansum(disk_sph_b1)+np.nansum(sph_b1)+np.nansum(irrg_b1)+np.nansum(ps_b1))*100
+                flag_frac2 = ((np.nansum(disk_b2[self.match_flags(disk_b2,flag_var2,output='loc')])+np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,flag_var2,output='loc')])+np.nansum(sph_b2[self.match_flags(sph_b2,flag_var2,output='loc')])+np.nansum(irrg_b2[self.match_flags(irrg_b2,flag_var2,output='loc')])+np.nansum(ps_b2)))/(np.nansum(disk_b2)+np.nansum(disk_sph_b2)+np.nansum(sph_b2)+np.nansum(irrg_b2)+np.nansum(ps_b2))*100
+                flag_frac3 = ((np.nansum(disk_b3[self.match_flags(disk_b3,flag_var3,output='loc')])+np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,flag_var3,output='loc')])+np.nansum(sph_b3[self.match_flags(sph_b3,flag_var3,output='loc')])+np.nansum(irrg_b3[self.match_flags(irrg_b3,flag_var3,output='loc')])+np.nansum(ps_b3)))/(np.nansum(disk_b3)+np.nansum(disk_sph_b3)+np.nansum(sph_b3)+np.nansum(irrg_b3)+np.nansum(ps_b3))*100
+                flag_frac4 = ((np.nansum(disk_b4[self.match_flags(disk_b4,flag_var4,output='loc')])+np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,flag_var4,output='loc')])+np.nansum(sph_b4[self.match_flags(sph_b4,flag_var4,output='loc')])+np.nansum(irrg_b4[self.match_flags(irrg_b4,flag_var4,output='loc')])+np.nansum(ps_b4)))/(np.nansum(disk_b4)+np.nansum(disk_sph_b4)+np.nansum(sph_b4)+np.nansum(irrg_b4)+np.nansum(ps_b4))*100
+                flag_frac5 = ((np.nansum(disk_b5[self.match_flags(disk_b5,flag_var5,output='loc')])+np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,flag_var5,output='loc')])+np.nansum(sph_b5[self.match_flags(sph_b5,flag_var5,output='loc')])+np.nansum(irrg_b5[self.match_flags(irrg_b5,flag_var5,output='loc')])+np.nansum(ps_b5)))/(np.nansum(disk_b5)+np.nansum(disk_sph_b5)+np.nansum(sph_b5)+np.nansum(irrg_b5)+np.nansum(ps_b5))*100
+            if flag[i] == 'merger' or 'Merger':
+                flag_frac1 = ((np.nansum(disk_b1[self.match_flags(disk_b1,flag_var1,output='loc')])+np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,flag_var1,output='loc')])+np.nansum(sph_b1[self.match_flags(sph_b1,flag_var1,output='loc')])+np.nansum(irrg_b1)+np.nansum(ps_b1[self.match_flags(ps_b1,flag_var1,output='loc')])))/(np.nansum(disk_b1)+np.nansum(disk_sph_b1)+np.nansum(sph_b1)+np.nansum(irrg_b1)+np.nansum(ps_b1))*100
+                flag_frac2 = ((np.nansum(disk_b2[self.match_flags(disk_b2,flag_var2,output='loc')])+np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,flag_var2,output='loc')])+np.nansum(sph_b2[self.match_flags(sph_b2,flag_var2,output='loc')])+np.nansum(irrg_b2)+np.nansum(ps_b2[self.match_flags(ps_b2,flag_var2,output='loc')])))/(np.nansum(disk_b2)+np.nansum(disk_sph_b2)+np.nansum(sph_b2)+np.nansum(irrg_b2)+np.nansum(ps_b2))*100
+                flag_frac3 = ((np.nansum(disk_b3[self.match_flags(disk_b3,flag_var3,output='loc')])+np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,flag_var3,output='loc')])+np.nansum(sph_b3[self.match_flags(sph_b3,flag_var3,output='loc')])+np.nansum(irrg_b3)+np.nansum(ps_b3[self.match_flags(ps_b3,flag_var3,output='loc')])))/(np.nansum(disk_b3)+np.nansum(disk_sph_b3)+np.nansum(sph_b3)+np.nansum(irrg_b3)+np.nansum(ps_b3))*100
+                flag_frac4 = ((np.nansum(disk_b4[self.match_flags(disk_b4,flag_var4,output='loc')])+np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,flag_var4,output='loc')])+np.nansum(sph_b4[self.match_flags(sph_b4,flag_var4,output='loc')])+np.nansum(irrg_b4)+np.nansum(ps_b4[self.match_flags(ps_b4,flag_var4,output='loc')])))/(np.nansum(disk_b4)+np.nansum(disk_sph_b4)+np.nansum(sph_b4)+np.nansum(irrg_b4)+np.nansum(ps_b4))*100
+                flag_frac5 = ((np.nansum(disk_b5[self.match_flags(disk_b5,flag_var5,output='loc')])+np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,flag_var5,output='loc')])+np.nansum(sph_b5[self.match_flags(sph_b5,flag_var5,output='loc')])+np.nansum(irrg_b5)+np.nansum(ps_b5[self.match_flags(ps_b5,flag_var5,output='loc')])))/(np.nansum(disk_b5)+np.nansum(disk_sph_b5)+np.nansum(sph_b5)+np.nansum(irrg_b5)+np.nansum(ps_b5))*100
+            # else:
+            #     flag_frac1 = ((np.nansum(disk_b1[self.match_flags(disk_b1,flag_var1,output='loc')])+np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,flag_var1,output='loc')])+np.nansum(sph_b1[self.match_flags(sph_b1,flag_var1,output='loc')])+np.nansum(irrg_b1[self.match_flags(irrg_b1,flag_var1,output='loc')])+np.nansum(ps_b1[self.match_flags(ps_b1,flag_var1,output='loc')])))/(np.nansum(disk_b1)+np.nansum(disk_sph_b1)+np.nansum(sph_b1)+np.nansum(irrg_b1)+np.nansum(ps_b1))*100
+            #     flag_frac2 = ((np.nansum(disk_b2[self.match_flags(disk_b2,flag_var2,output='loc')])+np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,flag_var2,output='loc')])+np.nansum(sph_b2[self.match_flags(sph_b2,flag_var2,output='loc')])+np.nansum(irrg_b2[self.match_flags(irrg_b1,flag_var1,output='loc')])+np.nansum(ps_b2[self.match_flags(ps_b2,flag_var2,output='loc')])))/(np.nansum(disk_b2)+np.nansum(disk_sph_b2)+np.nansum(sph_b2)+np.nansum(irrg_b2)+np.nansum(ps_b2))*100
+            #     flag_frac3 = ((np.nansum(disk_b5[self.match_flags(disk_b5,flag_var5,output='loc')])+np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,flag_var3,output='loc')])+np.nansum(sph_b3[self.match_flags(sph_b3,flag_var3,output='loc')])+np.nansum(irrg_b3[self.match_flags(irrg_b1,flag_var1,output='loc')])+np.nansum(ps_b3[self.match_flags(ps_b3,flag_var3,output='loc')])))/(np.nansum(disk_b3)+np.nansum(disk_sph_b3)+np.nansum(sph_b3)+np.nansum(irrg_b3)+np.nansum(ps_b3))*100
+
+            ax1.bar(xticks[0],np.nansum(disk_b1[self.match_flags(disk_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax1.bar(xticks[1],np.nansum(disk_sph_b1[self.match_flags(disk_sph_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[3],np.nansum(sph_b1[self.match_flags(sph_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                    ax1.bar(xticks[2],np.nansum(irrg_b1)/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                    ax1.bar(xticks[2],np.nansum(irrg_b1[self.match_flags(irrg_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax1.bar(xticks[4],np.nansum(ps_b1)/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                    ax1.bar(xticks[4],np.nansum(ps_b1[self.match_flags(ps_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax1.bar(xticks[2],np.nansum(irrg_b1[self.match_flags(irrg_b1,flag_var1,output='loc')])/factor_b1,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.text(0.05, nplace, f'n/N = {np.round(flag_frac1)}%', transform=ax1.transAxes,color=cflag)
+
+
+            ax2.bar(xticks[0],np.nansum(disk_b2[self.match_flags(disk_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax2.bar(xticks[1],np.nansum(disk_sph_b2[self.match_flags(disk_sph_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax1.bar(xticks[3],np.nansum(sph_b2[self.match_flags(sph_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                    ax2.bar(xticks[2],np.nansum(irrg_b2)/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                    ax2.bar(xticks[2],np.nansum(irrg_b2[self.match_flags(irrg_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax2.bar(xticks[4],np.nansum(ps_b2)/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                    ax2.bar(xticks[4],np.nansum(ps_b2[self.match_flags(ps_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax2.bar(xticks[2],np.nansum(irrg_b2[self.match_flags(irrg_b2,flag_var2,output='loc')])/factor_b2,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax2.text(0.05, nplace, f'n/N = {np.round(flag_frac2)}%', transform=ax2.transAxes,color=cflag)
+
+
+
+            ax3.bar(xticks[0],np.nansum(disk_b3[self.match_flags(disk_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax3.bar(xticks[1],np.nansum(disk_sph_b3[self.match_flags(disk_sph_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.bar(xticks[3],np.nansum(sph_b3[self.match_flags(sph_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                    ax3.bar(xticks[2],np.nansum(irrg_b3)/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                    ax3.bar(xticks[2],np.nansum(irrg_b3[self.match_flags(irrg_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax3.bar(xticks[4],np.nansum(ps_b3)/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                    ax3.bar(xticks[4],np.nansum(ps_b3[self.match_flags(ps_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax3.bar(xticks[2],np.nansum(irrg_b3[self.match_flags(irrg_b3,flag_var3,output='loc')])/factor_b3,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax3.text(0.05, nplace, f'n/N = {np.round(flag_frac3)}%', transform=ax3.transAxes,color=cflag)
+
+
+
+            ax4.bar(xticks[0],np.nansum(disk_b4[self.match_flags(disk_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax4.bar(xticks[1],np.nansum(disk_sph_b4[self.match_flags(disk_sph_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax4.bar(xticks[3],np.nansum(sph_b4[self.match_flags(sph_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                    ax4.bar(xticks[2],np.nansum(irrg_b4)/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                    ax4.bar(xticks[2],np.nansum(irrg_b4[self.match_flags(irrg_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax4.bar(xticks[4],np.nansum(ps_b4)/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                    ax4.bar(xticks[4],np.nansum(ps_b4[self.match_flags(ps_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax4.bar(xticks[2],np.nansum(irrg_b4[self.match_flags(irrg_b4,flag_var4,output='loc')])/factor_b4,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax4.text(0.05, nplace, f'n/N = {np.round(flag_frac4)}%', transform=ax4.transAxes,color=cflag)
+
+
+            ax5.bar(xticks[0],np.nansum(disk_b5[self.match_flags(disk_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
+            ax5.bar(xticks[1],np.nansum(disk_sph_b5[self.match_flags(disk_sph_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax5.bar(xticks[3],np.nansum(sph_b5[self.match_flags(sph_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            if flag[i] == 'tf' or flag[i] == 'TF':
+                    ax5.bar(xticks[2],np.nansum(irrg_b5)/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'ps' or flag[i] == 'PS':
+                    ax5.bar(xticks[2],np.nansum(irrg_b5[self.match_flags(irrg_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax5.bar(xticks[4],np.nansum(ps_b5)/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            elif flag[i] == 'merger' or flag[i] == 'Merger':
+                    ax5.bar(xticks[4],np.nansum(ps_b5[self.match_flags(ps_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+                    ax5.bar(xticks[2],np.nansum(irrg_b5[self.match_flags(irrg_b5,flag_var5,output='loc')])/factor_b5,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5)
+            ax5.text(0.05, nplace, f'n/N = {np.round(flag_frac5)}%', transform=ax5.transAxes,color=cflag)
+
+
+
+
 
         ax1.legend()
    
         if fractional == 'None':
-            ax1.set_ylim(0,100)    
-            ax2.set_ylim(0,100)    
-            ax3.set_ylim(0,100)    
-            ax4.set_ylim(0,100)    
-            ax5.set_ylim(0,100)
+            ax1.set_ylim(0,300)    
+            ax2.set_ylim(0,300)    
+            ax3.set_ylim(0,300)    
+            ax4.set_ylim(0,300)    
+            ax5.set_ylim(0,300)
         
         elif fractional == 'bin':
             ax1.set_ylim(0,0.7)    
