@@ -167,16 +167,16 @@ plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,mor
 # plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac2',flag='tf',bins='shape',fractional='bin',save=True)
-# plot_shape.shape_class_bar('_new/total_bar_shape_frac_tot_err',flag='tf',bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
+plot_shape.shape_class_bar('_new/_total_bar_shape_frac_tot_err',flag=['tf','ps','merger'],bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.,0.,0.,0.0,0.0])
 
 
 # # plot.bar('_new/total_bar_tf_s82xerr',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.38,0.62,0.47,0.0,0.0])
 # # plot.bar('_new/total_bar_tf_s82xerr2',flag='tf',save=True,error=True,err_subset_var=morph_ID,error_array=[0.47,0.47,0.72,0.0,0.0])
 # plot.bar('_new/total_bar_tf_s82xerr3',flag='tf',save=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
 
-
-plot.bar('_new/total_bar_frac_all',flag=['tf','ps','merger'],save=True,fractional=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
-plot.bar('_new/total_bar_all',flag=['tf','ps','merger'],save=True,fractional=False,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]])
+## [[0.0065,0.164],[0.0655,0.105],[0.2,0.077],[0.285,0.144],[0.111,0.082],[0.0885,0.180]] 
+# plot.bar('_new/total_bar_frac_all_checkerr2',flag=['tf','ps','merger'],save=True,fractional=True,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
+# plot.bar('_new/total_bar_all_checkerr2',flag=['tf','ps','merger'],save=True,fractional=False,error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
 
 # plot.bar('_new/total_bar_tf',flag='tf',save=True,error=False,err_subset=morph_field,err_subset_var='S821',error_array=[0.38,0.62,0.47,0.0,0.0])
 
@@ -184,7 +184,9 @@ plot.bar('_new/total_bar_all',flag=['tf','ps','merger'],save=True,fractional=Fal
 # plot.bar('_new/total_bar_ps',flag='PS',save=True)
 # plot.bar('_new/total_bar_merg',flag='merger',save=True)
 # plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],var_name='z',flag='tf')
-# # plot.bar_3bins('_new/total_bar_zbin',save=False,var=sed_z,lim=[0.4,0.8],fractional='bin')
-# plot.bar_3bins('_new/total_bar_zbin',save=True,var=sed_z,lim=[0.4,0.8],fractional='None',flag='TF',var_name=r'z')
-# plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',flag='tf')
-# plot.bar_3bins('_new/total_bar_Lxbin',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag='TF')
+
+# plot.bar_3bins('_new/total_bar_zbin_frac_all2',save=True,var=sed_z,lim=[0.4,0.8],fractional='bin',flag=['tf','ps','merger'],var_name=r'z',error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
+# plot.bar_3bins('_new/total_bar_zbin_all2',save=True,var=sed_z,lim=[0.4,0.8],fractional='None',flag=['tf','ps','merger'],var_name=r'z',error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
+
+# plot.bar_3bins('_new/total_bar_Lxbin_frac_all2',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',flag=['tf','ps','merger'],fractional='bin',error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
+# plot.bar_3bins('_new/total_bar_Lxbin_all2',save=True,var=sed_Lx,lim=[43.75,44.5],var_name=r'$L_{\rm X}$',fractional='None',flag=['tf','ps','merger'],error=True,err_subset=morph_field,err_subset_var='S821',error_array=[[0.4,0.165],[0.95,0.108],[0.82,0.082],[0.7,0.164],[0.63,0.088],[0.74,0.87]])
