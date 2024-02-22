@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import pickle
+from match import match
 
 def main(classes,input_dict):
     plot = Plotter(classes,input_dict)
@@ -45,6 +46,7 @@ class Plotter():
         plt.rcParams['ytick.minor.size'] = 3.
         plt.rcParams['ytick.minor.width'] = 2.
         plt.rcParams['hatch.linewidth'] = 2.5
+
 
     def match_flags(self,main_class,flag,out='main',output='array'):
 
@@ -116,18 +118,23 @@ class Plotter():
         for i in auge_numb_1d:
             if i == 1:
                 class_out.append('Disk')
-            if i == 2:
+            elif i == 2:
                 class_out.append('Disk_sph')
-            if i == 3:
+            elif i == 4:
                 class_out.append('Sph')
-            if i == 4:
+            elif i == 3:
                 class_out.append('Irrg')
-            if i == 5:
+            elif i == 5:
                 class_out.append('PS')
-            if i == 6:
+            elif i == 6:
                 class_out.append('Unc')
-            if i == 7:
+            elif i == 7:
                 class_out.append('None')
+
+            else:
+                class_out.append('None')
+
+        
 
         return np.asarray(class_out)
 
@@ -209,14 +216,14 @@ class Plotter():
                 flag_var = self.ps_f
                 cflag = 'b'
                 label_flag = 'Point Source'
-                nplace = 0.75
+                nplace = 0.7
                 flag_frac = ((np.nansum(self.disk[self.match_flags(self.disk,flag_var,output='loc')])+np.nansum(self.disk_sph[self.match_flags(self.disk_sph,flag_var,output='loc')])+np.nansum(self.sph[self.match_flags(self.sph,flag_var,output='loc')])+np.nansum(self.irrg[self.match_flags(self.irrg,flag_var,output='loc')])+np.nansum(self.ps)+np.nansum(self.unc[self.match_flags(self.unc,flag_var,output='loc')])+np.nansum(self.blank[self.match_flags(self.blank,flag_var,output='loc')])))/(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps)+np.nansum(self.unc)+np.nansum(self.blank))*100
 
             elif flag[i] == 'merger' or flag[i] == 'Merger':
                 flag_var = self.merger_f
                 cflag = 'g'
                 label_flag = 'Major Merger/Double source'
-                nplace = 0.7
+                nplace = 0.75
                 flag_frac = ((np.nansum(self.disk[self.match_flags(self.disk,flag_var,output='loc')])+np.nansum(self.disk_sph[self.match_flags(self.disk_sph,flag_var,output='loc')])+np.nansum(self.sph[self.match_flags(self.sph,flag_var,output='loc')])+np.nansum(self.irrg[self.match_flags(self.irrg,flag_var,output='loc')])+np.nansum(self.ps[self.match_flags(self.ps,flag_var,output='loc')])+np.nansum(self.unc[self.match_flags(self.unc,flag_var,output='loc')])+np.nansum(self.blank[self.match_flags(self.blank,flag_var,output='loc')])))/(np.nansum(self.disk)+np.nansum(self.disk_sph)+np.nansum(self.sph)+np.nansum(self.irrg)+np.nansum(self.ps)+np.nansum(self.unc)+np.nansum(self.blank))*100
 
             ax.bar(xticks[0],np.nansum(self.disk[self.match_flags(self.disk,flag_var,output='loc')])/frac,color='none',edgecolor=cflag,linewidth=2.5,alpha=0.75,width=1.5,label=label_flag)
@@ -243,25 +250,46 @@ class Plotter():
         plt.show()
 
 
-    def bar_3bins(self,savestring,flag='None',save=True,var=None,lim=[np.nan,np.nan],fractional='None',var_name='None',error=False,err_subset=None,error_array=None,err_subset_var=None):
+    def bar_3bins(self,savestring,flag='None',save=True,var=None,lim=[np.nan,np.nan],fractional='None',var_name='None',error=False,err_subset=None,error_array=None,err_subset_var=None,ID_match=True,ID_morph=None,ID=None):
 
-        disk1 = self.disk[var < lim[0]]
-        disk_sph1 = self.disk_sph[var < lim[0]]
-        sph1 = self.sph[var < lim[0]]
-        irrg1 = self.irrg[var < lim[0]]
-        ps1 = self.ps[var < lim[0]]
+        print('here')
+        print(ID_morph)
+        print(ID)
 
-        disk2 = self.disk[(lim[0] < var) & (var < lim[1])]
-        disk_sph2 = self.disk_sph[(lim[0] < var) & (var < lim[1])]
-        sph2 = self.sph[(lim[0] < var) & (var < lim[1])]
-        irrg2 = self.irrg[(lim[0] < var) & (var < lim[1])]
-        ps2 = self.ps[(lim[0] < var) & (var < lim[1])]
+        if ID_match:
+            ix, iy = match(ID_morph,ID)
 
-        disk3 = self.disk[lim[1] < var]
-        disk_sph3 = self.disk_sph[lim[1] < var]
-        sph3 = self.sph[lim[1] < var]
-        irrg3 = self.irrg[lim[1] < var]
-        ps3 = self.ps[lim[1] < var]
+            disk_match = self.disk[ix]
+            disk_sph_match = self.disk_sph[ix]
+            sph_match = self.sph[ix]
+            irrg_match = self.irrg[ix]
+            ps_match = self.ps[ix]
+
+            tf_f_match = self.tf_f[ix]
+            ps_f_match = self.ps_f[ix]
+            merger_f_match = self.merger_f[ix]
+            
+            var = var[iy]
+            err_subset = err_subset[iy]
+
+
+        disk1 = disk_match[var < lim[0]]
+        disk_sph1 = disk_sph_match[var < lim[0]]
+        sph1 = sph_match[var < lim[0]]
+        irrg1 = irrg_match[var < lim[0]]
+        ps1 = ps_match[var < lim[0]]
+
+        disk2 = disk_match[(lim[0] < var) & (var < lim[1])]
+        disk_sph2 = disk_sph_match[(lim[0] < var) & (var < lim[1])]
+        sph2 = sph_match[(lim[0] < var) & (var < lim[1])]
+        irrg2 = irrg_match[(lim[0] < var) & (var < lim[1])]
+        ps2 = ps_match[(lim[0] < var) & (var < lim[1])]
+
+        disk3 = disk_match[lim[1] < var]
+        disk_sph3 = disk_sph_match[lim[1] < var]
+        sph3 = sph_match[lim[1] < var]
+        irrg3 = irrg_match[lim[1] < var]
+        ps3 = ps_match[lim[1] < var]
 
         if fractional == 'bin':
             factor_b1 = len(var[var < lim[0]])
@@ -374,6 +402,7 @@ class Plotter():
         print(err_sample_b3,err_scale[2][0],err_sample_b3*err_scale[2][0])
 
         if error:
+            print(factor_b1)
             yerr1_b1 = [[(err_sample_b1_1/factor_b1)*err_scale[0][0]],[(err_sample_b1/factor_b1)*err_scale[0][1]]]
             yerr2_b1 = [[(err_sample_b1_2/factor_b1)*err_scale[1][0]],[(err_sample_b1/factor_b1)*err_scale[1][1]]]
             yerr3_b1 = [[(err_sample_b1_3/factor_b1)*err_scale[2][0]],[(err_sample_b1/factor_b1)*err_scale[2][1]]]
@@ -414,31 +443,31 @@ class Plotter():
 
         for i in range(len(flag)):
             if flag[i] == 'tf' or flag[i] == 'TF':
-                flag_var1 = self.tf_f[var < lim[0]]
-                flag_var2 = self.tf_f[(lim[0] < var) & (var < lim[1])]
-                flag_var3 = self.tf_f[lim[1] < var]
+                flag_var1 = tf_f_match[var < lim[0]]
+                flag_var2 = tf_f_match[(lim[0] < var) & (var < lim[1])]
+                flag_var3 = tf_f_match[lim[1] < var]
 
                 cflag = 'r'
                 label_flag = 'Tidal Features'
                 nplace = 0.85
 
             elif flag[i] == 'ps' or flag[i] == 'PS':
-                flag_var1 = self.ps_f[var < lim[0]]
-                flag_var2 = self.ps_f[(lim[0] < var) & (var < lim[1])]
-                flag_var3 = self.ps_f[lim[1] < var]
+                flag_var1 = ps_f_match[var < lim[0]]
+                flag_var2 = ps_f_match[(lim[0] < var) & (var < lim[1])]
+                flag_var3 = ps_f_match[lim[1] < var]
 
                 cflag = 'b'
                 label_flag = 'Point Source'
-                nplace = 0.8
+                nplace = 0.75
 
             elif flag[i] == 'merger' or flag[i] == 'Merger':
-                flag_var1 = self.merger_f[var < lim[0]]
-                flag_var2 = self.merger_f[(lim[0] < var) & (var < lim[1])]
-                flag_var3 = self.merger_f[lim[1] < var]
+                flag_var1 = merger_f_match[var < lim[0]]
+                flag_var2 = merger_f_match[(lim[0] < var) & (var < lim[1])]
+                flag_var3 = merger_f_match[lim[1] < var]
 
                 cflag = 'g'
                 label_flag = 'Major Merger'
-                nplace = 0.75
+                nplace = 0.8
 
             if flag[i] == 'tf' or 'TF':
                 flag_frac1 = ((np.nansum(disk1[self.match_flags(disk1,flag_var1,output='loc')])+np.nansum(disk_sph1[self.match_flags(disk_sph1,flag_var1,output='loc')])+np.nansum(sph1[self.match_flags(sph1,flag_var1,output='loc')])+np.nansum(irrg1)+np.nansum(ps1[self.match_flags(ps1,flag_var1,output='loc')])))/(np.nansum(disk1)+np.nansum(disk_sph1)+np.nansum(sph1)+np.nansum(irrg1)+np.nansum(ps1))*100
@@ -516,11 +545,137 @@ class Plotter():
         plt.xlim(xlim[0],xlim[1])
         # plt.ylim(0,ylim)
         plt.title(title)
+
+        ax.text(0.025,0.9,f'N = {len(x)}', transform=ax.transAxes)
+
         
         if save:
             plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/galight_figs/{savestring}.pdf')
         plt.show()
 
+
+    def bin_frac(self,x,val,bins,remove=False,remove_in=None):
+        out_frac = []
+        bin_loc = []
+        for i in range(len(bins)-1):
+            val_bins = val[(bins[i] < x) & (x < bins[i+1])]
+            if remove:
+                val_remove = remove_in[(bins[i] < x) & (x < bins[i+1])]
+            else:
+                val_remove = np.asarray([0])
+            frac = np.nansum(val_bins)/(len(val_bins)-np.nansum(val_remove))
+            out_frac.append(frac)
+            bin_loc.append((bins[i]+bins[i+1])/2)
+
+        return np.asarray(out_frac), np.asarray(bin_loc)
+
+    def bin_frac_err(self,x,val,bins,subset=None,subset_val=None,err_array=None,remove=False,remove_in=None):
+        out_err  = []
+        out_frac = []
+        bin_loc  = [] 
+
+        err_scale = np.asarray(err_array)
+        if subset is None:
+            for i in range(len(bins)-1):
+                subset = np.full(np.shape(subset_val[(bins[i] < x) & (x < bins[i+1])]),True)
+
+        else:
+            for i in range(len(bins)-1):
+                val_bins = val[(bins[i] < x) & (x < bins[i+1])]
+                if remove:
+                    val_remove = remove_in[(bins[i] < x) & (x < bins[i+1])]
+                else:
+                    val_remove = np.asarray([0]) 
+                subset_use = (subset[(bins[i] < x) & (x < bins[i+1])] == subset_val)
+                frac = np.nansum(val_bins)/(len(val_bins)-np.nansum(val_remove))
+                frac_subset = np.nansum(val_bins[subset_use])/(len(val_bins[subset_use])-np.nansum(val_remove[subset_use])) 
+                len_subset = len(val_bins[subset_use])-np.nansum(val_remove[subset_use]) 
+                print('low: ',frac_subset,err_scale[0])
+                print('up: ',len_subset,err_scale[1])
+                lowerr = frac_subset*err_scale[0]
+                upper = len_subset/(len(val_bins)-np.nansum(val_remove))*err_scale[1]
+                out_err.append([lowerr,upper])
+                out_frac.append(frac)
+                bin_loc.append((bins[i]+bins[i+1])/2)
+        out_err = np.asarray(out_err)
+        out_frac = np.asarray(out_frac)
+        bin_loc = np.asarray(bin_loc)
+
+        return out_frac, bin_loc, out_err
+
+    
+    def scatter_fraction(self,savestring,x,xlabel=' ',bins=np.arange(0,10,1),xlim=[0,10],ylim=[0,1.025],save=False,ID_match = True, morph_ID=None,IDm=None,flags=False,errors=False,error_vals=None,subset_var=None,err_subset=None,subplot=False,):
+
+        ix, iy = match(morph_ID, IDm)
+        disk_match = self.disk[ix]
+        disk_sph_match = self.disk_sph[ix]
+        irrg_match = self.irrg[ix]
+        sph_match = self.sph[ix]
+        ps_match = self.ps[ix]
+        unc_match = self.unc[ix]
+
+        tf_f_match = self.tf_f[ix]
+        ps_f_match = self.ps_f[ix]
+        merg_match = self.merger_f[ix]
+
+        x_match = x[iy]
+        err_subset = err_subset[ix]
+
+        # disk_frac, disk_x = self.bin_frac(x_match,disk_match,bins=bins,remove=True,remove_in=unc_match)
+        # disk_sph_frac, disk_sph_x = self.bin_frac(x_match,disk_sph_match,bins=bins,remove=True,remove_in=unc_match)
+        # irrg_frac, irrg_x = self.bin_frac(x_match,irrg_match,bins=bins,remove=True,remove_in=unc_match)
+        # sph_frac, sph_x = self.bin_frac(x_match,sph_match,bins=bins,remove=True,remove_in=unc_match)
+        # ps_frac, ps_x = self.bin_frac(x_match,ps_match,bins=bins,remove=True,remove_in=unc_match)
+
+        disk_frac, disk_x, disk_err = self.bin_frac_err(x_match,disk_match,bins=bins,remove=True,remove_in=unc_match,subset_val=subset_var,subset=err_subset,err_array=error_vals[0])
+        disk_sph_frac, disk_sph_x, disk_sph_err = self.bin_frac_err(x_match,disk_sph_match,bins=bins,remove=True,remove_in=unc_match,subset_val=subset_var,subset=err_subset,err_array=error_vals[0])
+        irrg_frac, irrg_x, irrg_err = self.bin_frac_err(x_match,irrg_match,bins=bins,remove=True,remove_in=unc_match,subset_val=subset_var,subset=err_subset,err_array=error_vals[0])
+        sph_frac, sph_x, sph_err = self.bin_frac_err(x_match,sph_match,bins=bins,remove=True,remove_in=unc_match,subset_val=subset_var,subset=err_subset,err_array=error_vals[0])
+        ps_frac, ps_x, ps_err = self.bin_frac_err(x_match,ps_match,bins=bins,remove=True,remove_in=unc_match,subset_val=subset_var,subset=err_subset,err_array=error_vals[0])
+
+        tf_f_frac, tf_f_x = self.bin_frac(x_match,tf_f_match,bins=np.arange(43.,47.5,0.25))
+        ps_f_frac, ps_f_x = self.bin_frac(x_match,ps_f_match,bins=bins)
+        merg_f_frac, merg_f_x = self.bin_frac(x_match,merg_match,bins=bins)
+
+        tot_disk_err = np.sqrt(disk_err**2 + disk_sph_err**2)
+
+        fig = plt.figure(figsize=(12,6))
+        gs = fig.add_gridspec(nrows=1,ncols=1)
+
+        ax1 = fig.add_subplot(gs[0])
+
+        ax1.errorbar(disk_x-0.02,disk_frac+disk_sph_frac,yerr=tot_disk_err.T,color='b',capsize=5,alpha=0.5,ls='')
+        ax1.errorbar(irrg_x,irrg_frac,yerr=irrg_err.T,color='green',capsize=5,alpha=0.5,ls='')
+        ax1.errorbar(sph_x+0.02,sph_frac,yerr=sph_err.T,color='red',capsize=5,alpha=0.5,ls='')
+        ax1.errorbar(ps_x+0.04,ps_frac,yerr=ps_err.T,color='k',capsize=5,alpha=0.5,ls='')
+
+        ax1.plot(disk_x-0.02,disk_frac+disk_sph_frac,'^',color='b',ms=13,label='Disk/Disk-Sph',alpha=0.85)
+        # ax1.plot(disk_sph_x,disk_sph_frac,'x',color='cyan',label='Disk-Sph')
+        ax1.plot(irrg_x,irrg_frac,'s',color='green',ms=13,label='Irrg',alpha=0.85)
+        ax1.plot(sph_x+0.02,sph_frac,'.',color='red',ms=13,label='Sph',alpha=0.85)
+        ax1.plot(ps_x+0.04,ps_frac,'*',color='k',ms=13,label='PS',alpha=0.85)
+        ax1.plot(tf_f_x,tf_f_frac,color='gray',lw=6,alpha=0.5,label='tidal features flag')
+
+
+
+        print(disk_frac[0]+disk_sph_frac[0]+irrg_frac[0]+sph_frac[0]+ps_frac[0])
+        print(disk_frac[1]+disk_sph_frac[1]+irrg_frac[1]+sph_frac[1]+ps_frac[1])
+        print(disk_frac[2]+disk_sph_frac[2]+irrg_frac[2]+sph_frac[2]+ps_frac[2])
+        print(disk_frac[3]+disk_sph_frac[3]+irrg_frac[3]+sph_frac[3]+ps_frac[3])
+        
+        
+        ax1.set_xlim(xlim[0],xlim[1])
+        ax1.set_ylim(ylim[0],ylim[1])
+        ax1.set_xlabel(xlabel)
+        ax1.set_ylabel('Fraction')
+        
+        plt.legend(fontsize=16)
+        plt.grid()
+        plt.tight_layout()
+
+        if save:
+            plt.savefig(f'/Users/connor_auge/Research/Disertation/morphology/visual/figs/{savestring}.pdf')
+        plt.show()
 
 
 if __name__ == '__main__':
