@@ -10,6 +10,7 @@ from matplotlib.collections import LineCollection
 import matplotlib.patheffects as PathEffects
 from match import match
 from Morph_Plots import Plotter
+import scipy.stats
 
 def main(auge_dict, in_dict):
     comp_plots = Morph_Compare(auge_dict, in_dict)
