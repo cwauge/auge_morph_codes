@@ -166,18 +166,18 @@ lilly_dict = lilly_inf.make_dict(lilly_cols,lilly_data,transpose=True)
 
 
 plot = Plotter(cols,dict_out)
-# plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
+plot_shape = Shape_Plotter(cols,dict_out,morph_ID,sed_id,sed_shape,sed_field,morph_field)
 
-# hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
-# auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
-# hsc_plot_comp.hist_comp_2D('hsc_comp2',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
-# hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin2',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
+hsc_plot_comp = Morph_Compare(dict_out,dict_out_hsc)
+auge_x, auge_y = hsc_plot_comp.Auge_to_Auge()
+hsc_plot_comp.hist_comp_2D('hsc_comp2',auge_x,auge_y,xlabel='COSMOS HST',ylabel='COSMOS HSC',IDx=morph_ID,IDy=morph_ID_hsc,match_IDs=True)
+hsc_plot_comp.hist_comp_2D_split('hsc_comp_zbin2',auge_x, auge_y, xlabel='HST Classifications', ylabel='HSC Classifications', IDx=morph_ID, IDy=morph_ID_hsc,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 
-# jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
-# auge_x, jwst_y = jwst_plot_comp.Auge_to_Auge()
-# jwst_plot_comp.hist_comp_2D('jwst_comp',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
-# jwst_plot_comp.hist_comp_2D_split('jwst_comp_zbin',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
+jwst_plot_comp = Morph_Compare(dict_out,dict_jwst)
+auge_x, jwst_y = jwst_plot_comp.Auge_to_Auge()
+jwst_plot_comp.hist_comp_2D('jwst_comp',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True)
+jwst_plot_comp.hist_comp_2D_split('jwst_comp_zbin',auge_x, jwst_y, xlabel='HST Classifications', ylabel='JWST Classifications', IDx=morph_ID, IDy=ID_jwst,match_IDs=True,cond=True,cond_var=sed_z,cond_lim=0.5)
 
 # wolf_plot_comp = Morph_Compare(dict_out,wolf_dict)
 # wolf_x, wolf_y = wolf_plot_comp.Wolf_to_Auge()
@@ -196,9 +196,9 @@ plot = Plotter(cols,dict_out)
 # cosmos_disp = Display(cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 # main(sed_id,cols,dict_out,morph_ID,sed_id,sed_shape,sed_x,sed_y,sed_z,sed_Lx,'/Users/connor_auge/Research/Disertation/morphology/visual/COSMOS/cosmos_cutouts_sample_published/')
 
-# plot_shape.shape_class_bar('_new/total_bar_shape_mg2',flag='merger',bins='shape',save=True)
-# plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
-# plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_mg2',flag='merger',bins='shape',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_ps',flag='ps',bins='shape',save=True)
+plot_shape.shape_class_bar('_new/total_bar_shape_merger',flag='merger',bins='shape',save=True)
 
 # plot_shape.shape_class_bar('_new/total_bar_shape_frac2',flag='tf',bins='shape',fractional='bin',save=True)
 # plot_shape.shape_class_bar('_new/_total_bar_shape_frac_tot_err',flag=['tf','ps','merger'],bins='shape',fractional='None',save=True,err_subset=morph_field,err_subset_var='S821',error_array=[0.,0.,0.,0.0,0.0])
